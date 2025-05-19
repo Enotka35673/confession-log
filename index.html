@@ -8,144 +8,126 @@
   <style>
     body {
       margin: 0;
-      background: black;
-      color: #00ffff;
+      background-color: black;
+      color: #00ffee;
       font-family: 'VT323', monospace;
-      overflow-x: hidden;
+      font-size: 1.2em;
       padding: 2em;
-      user-select: none;
+      overflow-x: hidden;
+      overflow-y: scroll;
     }
 
     img {
       display: block;
-      margin: 0 auto 2em;
+      margin: 0 auto 2em auto;
       width: 320px;
-      height: auto;
       image-rendering: pixelated;
     }
 
-    .typewriter {
+    .typed-line {
       white-space: pre-wrap;
-      overflow: hidden;
-      font-size: 1.5em;
+      line-height: 1.4em;
     }
 
     .quote {
       color: fuchsia;
     }
 
-    .glitch {
+    .glitch-text {
       font-size: 2.5em;
-      color: white;
+      color: red;
       text-align: center;
-      animation: glitch 0.5s infinite;
+      animation: glitchEffect 0.3s infinite;
       white-space: pre-wrap;
-      margin-top: 2em;
     }
 
-    @keyframes glitch {
-      0% {text-shadow: 2px 0 red, -2px 0 blue; transform: translate(0);}
-      20% {text-shadow: -2px 0 red, 2px 0 blue; transform: translate(-1px, 1px);}
-      40% {text-shadow: 2px 2px red, -2px -2px blue; transform: translate(1px, -1px);}
-      60% {text-shadow: -2px -2px red, 2px 2px blue; transform: translate(0, 1px);}
-      80% {text-shadow: 0 0 red, 0 0 blue; transform: translate(1px);}
-      100% {text-shadow: 2px 0 red, -2px 0 blue; transform: translate(0);}
+    @keyframes glitchEffect {
+      0% { text-shadow: 2px 0 red, -2px 0 blue; transform: translate(0); }
+      20% { text-shadow: -2px 0 red, 2px 0 blue; transform: translate(-1px, 1px); }
+      40% { text-shadow: 2px 2px red, -2px -2px blue; transform: translate(1px, -1px); }
+      60% { text-shadow: -2px -2px red, 2px 2px blue; transform: translate(-1px, 1px); }
+      80% { text-shadow: 0 0 red, 0 0 blue; transform: translate(0); }
+      100% { text-shadow: 2px 0 red, -2px 0 blue; transform: translate(1px, 0); }
     }
 
-    .flash {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: white;
-      opacity: 0;
-      z-index: 9999;
-      pointer-events: none;
-      animation: flash 0.2s ease-in-out;
-    }
-
-    @keyframes flash {
-      0% {opacity: 0;}
-      50% {opacity: 1;}
-      100% {opacity: 0;}
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <img src="giphy.gif" alt="Glitch gif" id="glitchImage">
-  <div id="textContainer" class="typewriter"></div>
-  <div id="screamer" class="glitch" style="display: none;">░░░ WE SEE YOU ░░░</div>
-  <div id="flash" class="flash" style="display: none;"></div>
-
-  <audio id="screamAudio" preload="auto">
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_3911e73801.mp3" type="audio/mpeg">
-  </audio>
+  <img src="giphy.gif" alt="Glitch gif">
+  <div id="text-container"></div>
+  <div id="screamer" class="glitch-text hidden">░░░ WE SEE YOU ░░░</div>
+  <audio id="typeSound" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Typewriter-key.wav"></audio>
+  <audio id="screamSound" src="https://www.fesliyanstudios.com/play-mp3/4386" preload="auto"></audio>
 
   <script>
-    const text = `CONFESSION-LOG_0173 :: ACCESS GRANTED
-SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED
+    const lines = [
+      'CONFESSION-LOG_0173 :: ACCESS GRANTED',
+      'SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED',
+      '',
+      'Parsing soul fragment...',
+      '',
+      '[IN LUMEN VERITAS]',
+      '...',
+      '██ Data stream unstable ██',
+      '',
+      'Salvation Attempt: FAILED',
+      '',
+      'SUBJECT 0173: <span class="quote">“I prayed. No one answered.”</span>',
+      'SUBJECT 0173: <span class="quote">“I heard laughter in the static.”</span>',
+      '',
+      'Faith checksum: NULL',
+      '',
+      '> SYSTEM RESPONSE:',
+      '     ░░░ WE SEE YOU ░░░'
+    ];
 
-Parsing soul fragment...
+    const container = document.getElementById('text-container');
+    const screamer = document.getElementById('screamer');
+    const typeSound = document.getElementById('typeSound');
+    const screamSound = document.getElementById('screamSound');
 
-[IN LUMEN VERITAS]
-. . .
+    let currentLine = 0;
 
-██ Data stream unstable ██
-
-Salvation Attempt: FAILED
-
-<span class="quote">SUBJECT 0173: “I prayed. No one answered.”</span>
-<span class="quote">SUBJECT 0173: “I heard laughter in the static.”</span>
-
-Faith checksum: NULL
-
-> SYSTEM RESPONSE:
-     ░░░ WE SEE YOU ░░░`;
-
-    const container = document.getElementById("textContainer");
-    let i = 0;
-
-    function typeWriter() {
-      if (i < text.length) {
-        const char = text[i];
-        container.innerHTML += char;
+    function typeLine(line, idx, cb) {
+      const p = document.createElement('p');
+      p.className = 'typed-line';
+      container.appendChild(p);
+      let i = 0;
+      const interval = setInterval(() => {
+        p.innerHTML = line.slice(0, i);
+        if (line[i - 1] !== ' ' && line[i - 1] !== undefined) typeSound.play();
         i++;
-
-        if (Math.random() < 0.01) {
-          container.innerHTML += `\nERROR_${Math.floor(Math.random() * 999)}: ${['MALFORMED', 'BINARY FAITH', 'SOUL_FRAGMENTATION'][Math.floor(Math.random()*3)]}`;
+        if (i > line.length) {
+          clearInterval(interval);
+          cb();
         }
+      }, 80);
+    }
 
-        let delay = 30;
-        if (char === '.' || char === '\n') delay = 300;
-        if (char === '“' || char === '”') delay = 100;
-
-        setTimeout(typeWriter, delay);
+    function typeAllLines() {
+      if (currentLine < lines.length) {
+        typeLine(lines[currentLine], currentLine, () => {
+          currentLine++;
+          setTimeout(typeAllLines, 400);
+        });
       } else {
-        triggerScreamer();
+        document.body.addEventListener('click', triggerScreamer, { once: true });
       }
     }
 
     function triggerScreamer() {
-      const flash = document.getElementById("flash");
-      const screamer = document.getElementById("screamer");
-      const audio = document.getElementById("screamAudio");
-      
-      setTimeout(() => {
-        flash.style.display = 'block';
-        screamer.style.display = 'block';
-        screamer.style.fontSize = '4em';
-        audio.play().catch(e => console.log("Audio not played, user interaction required."));
-
-        setTimeout(() => {
-          flash.style.display = 'none';
-        }, 200);
-      }, 1000);
+      container.innerHTML = '';
+      document.body.style.backgroundColor = 'black';
+      screamer.classList.remove('hidden');
+      screamSound.play();
     }
 
     window.onload = () => {
-      typeWriter();
-    };
+      typeAllLines();
+    }
   </script>
 </body>
 </html>
