@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       background-color: black;
-      color: white;
+      color: #d3d3d3;
       font-family: 'VT323', monospace;
       overflow: hidden;
     }
@@ -20,20 +20,21 @@
       max-width: 900px;
       height: 80vh;
       margin: 5vh auto;
-      border: 2px solid white;
+      border: 1px solid #444;
       padding: 20px;
       box-sizing: border-box;
       position: relative;
       white-space: pre-wrap;
       font-size: 20px;
       overflow-y: auto;
+      background: rgba(0, 0, 0, 0.8);
     }
 
     .start-btn {
-      border: 2px solid white;
+      border: 1px solid #777;
       padding: 10px 20px;
       background: black;
-      color: white;
+      color: #aaa;
       font-size: 20px;
       cursor: pointer;
       display: inline-block;
@@ -41,7 +42,7 @@
     }
 
     .fuchsia {
-      color: #ed0dd9;
+      color: #c084fc;
     }
 
     .glitching {
@@ -49,223 +50,117 @@
     }
 
     @keyframes glitch {
-      0% { transform: translate(0, 0); }
-      20% { transform: translate(-1px, 1px); }
-      40% { transform: translate(1px, -1px); }
-      60% { transform: translate(-1px, -1px); }
-      80% { transform: translate(1px, 1px); }
-      100% { transform: translate(0, 0); }
-    }
-
-    .red {
-      color: red;
+      0% { transform: translate(0, 0); opacity: 1; }
+      20% { transform: translate(-0.5px, 0.5px); opacity: 0.9; }
+      40% { transform: translate(0.5px, -0.5px); opacity: 1; }
+      60% { transform: translate(-0.5px, -0.5px); opacity: 0.85; }
+      80% { transform: translate(0.5px, 0.5px); opacity: 1; }
+      100% { transform: translate(0, 0); opacity: 1; }
     }
 
     .centered-text {
       text-align: center;
-      font-size: 48px;
+      font-size: 36px;
+      color: #888;
     }
 
-    .noise {
+    #noise {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: url('noise.gif');
+      object-fit: cover;
+      opacity: 0.03;
+      z-index: -1;
       pointer-events: none;
-      opacity: 0.05;
-      z-index: 9999;
-    }
-
-    #screen-flicker {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: black;
-      z-index: 9998;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.1s;
-    }
-
-    .blood-text {
-      position: absolute;
-      color: crimson;
-      font-size: 32px;
-      opacity: 0;
-      animation: flickerText 2s infinite;
-      pointer-events: none;
-      z-index: 10000;
-    }
-
-    @keyframes flickerText {
-      0%, 100% { opacity: 0; }
-      50% { opacity: 0.6; transform: scale(1.05); }
     }
   </style>
 </head>
 <body>
-  <div class="noise"></div>
-  <div id="screen-flicker"></div>
+  <img src="noise.gif" id="noise" alt="Static noise" />
+  <audio id="bgm" src="creepy-bg.mp3" loop preload="auto"></audio>
+
   <div class="screen" id="terminal">
     <div id="startScreen" class="centered-text">
-      <button class="start-btn" onclick="startTyping()">Click to start...</button>
+      <button class="start-btn" onclick="startTyping()">ACCESS LOG</button>
     </div>
   </div>
-  <img id="giphy" src="giphy.gif" alt="Giphy" style="display: none;" />
-  <img id="vhsGlitch" src="vhs-glitch.gif" alt="VHS Glitch" style="display: none;" />
-  <audio id="bg-audio" autoplay loop>
-    <source src="creepy-bg.mp3" type="audio/mpeg" />
-  </audio>
 
   <script>
     const terminal = document.getElementById('terminal');
     const startScreen = document.getElementById('startScreen');
-    const giphy = document.getElementById('giphy');
-    const glitch = document.getElementById('vhsGlitch');
+    const bgm = document.getElementById('bgm');
 
     const sleep = ms => new Promise(res => setTimeout(res, ms));
 
-    function distortChar(c) {
-      const glitchChars = ['█','▓','░','#','%','@','*'];
-      return Math.random() < 0.1 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : c;
-    }
-
-    const print = async (text, speed = 100) => {
+    const print = async (text, speed = 60) => {
       for (let i = 0; i < text.length; i++) {
-        terminal.innerHTML += distortChar(text[i]);
+        terminal.innerHTML += text[i];
         await sleep(speed);
       }
       terminal.innerHTML += "\n";
     };
 
-    const typeStyledText = async (text, className, speed = 100) => {
+    const typeStyledText = async (text, className, speed = 60) => {
       const span = document.createElement("span");
       span.className = className;
       terminal.appendChild(span);
 
       for (let i = 0; i < text.length; i++) {
-        span.innerHTML += distortChar(text[i]);
+        span.innerHTML += text[i];
         await sleep(speed);
       }
 
       terminal.innerHTML += "\n";
     };
 
-    const animatedDots = async () => {
-      for (let i = 0; i < 2; i++) {
-        terminal.innerHTML += '.';
-        await sleep(1000);
-      }
-      terminal.innerHTML = terminal.innerHTML.slice(0, -2);
-      for (let i = 0; i < 2; i++) {
-        terminal.innerHTML += '.';
-        await sleep(1000);
-      }
-    };
-
-    async function flicker(times = 3) {
-      const flickerDiv = document.getElementById('screen-flicker');
-      for (let i = 0; i < times; i++) {
-        flickerDiv.style.opacity = '1';
-        await sleep(50 + Math.random() * 100);
-        flickerDiv.style.opacity = '0';
-        await sleep(50 + Math.random() * 200);
-      }
-    }
-
-    function spawnBloodText() {
-      const phrases = ["HELP", "RUN", "IT'S HERE", "PRAY", "NO ESCAPE"];
-      const div = document.createElement('div');
-      div.className = 'blood-text';
-      div.innerText = phrases[Math.floor(Math.random() * phrases.length)];
-      div.style.top = `${Math.random() * 80}vh`;
-      div.style.left = `${Math.random() * 80}vw`;
-      document.body.appendChild(div);
-
-      setTimeout(() => div.remove(), 3000);
-    }
-
-    setInterval(spawnBloodText, 5000);
-
     async function startTyping() {
       startScreen.style.display = 'none';
       terminal.innerHTML = '';
+      bgm.volume = 0.3;
+      bgm.play();
 
-      await print(">> CONFESSION-LOG_0173 :: ACCESS GRANTED");
-      await print(">> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED");
-      await print(">>\n>> Parsing soul fragment...");
-      await print(">>\n>> [IN LUMEN VERITAS]");
-      await animatedDots();
-      await print("\n>> ██ Data stream unstable ██");
-      await print(">>\n>> Salvation Attempt: FAILED");
+      await print(">> LOG ID: CONFESSION-0173");
+      await print(">> SYSTEM PROTOCOL: RECALLING MEMORY FRAGMENT...");
+      await sleep(1200);
+      await print(">> Fragment loaded.");
       await sleep(1000);
 
-      terminal.innerHTML = '';
-      await sleep(1000);
+      await typeStyledText("\"It wasn’t supposed to remember.\"", "fuchsia", 80);
+      await sleep(800);
+      await typeStyledText("\"But the mirror blinked first.\"", "fuchsia", 80);
+      await sleep(1500);
 
-      giphy.style.display = 'block';
+      await print(">> [DATA RECONSTRUCTION INTEGRITY: 17%]");
+      await sleep(1200);
+      await print(">> ... anomalies detected.");
+      await sleep(1200);
 
-      await print(">> SUBJECT 0173: ", 100);
-      await typeStyledText("\"I prayed. No one answered.\"", "fuchsia", 100);
-
-      await print(">> SUBJECT 0173: ", 100);
-      await typeStyledText("\"I heard laughter in the static.\"", "fuchsia", 100);
-
-      await print(">>\n>> Faith checksum: NULL");
-
-      document.body.addEventListener('click', glitchSequence, { once: true });
+      await glitchSequence();
     }
 
     async function glitchSequence() {
-      terminal.innerHTML = '';
-      giphy.style.display = 'none';
-      glitch.style.display = 'block';
-      await sleep(200);
-      glitch.style.display = 'none';
-
-      await flicker(6);
-
-      const chaos = [
-        "ERROR: ANIMA CONSUMPTA",
-        "SANGUIS MEUS, LUX TENEBRIS",
-        "SATANAS EXAUDI NOS",
-        "DOMINUS MORTIS",
-        "FAITH.TXT: CORRUPTED",
-        "INFERNUM ACCESS GRANTED",
-        "††† DEUS ABANDONED †††"
+      const thoughts = [
+        "you saw it too",
+        "the door never closed",
+        "they never stopped watching",
+        "it breathes through wires",
+        "she said your name in reverse",
+        "static is not silence",
+        "you're not the first"
       ];
 
-      for (let i = 0; i < 100; i++) {
-        const msg = chaos[Math.floor(Math.random() * chaos.length)];
-        terminal.innerHTML += `<div class='red glitching'>${msg}</div>`;
-        await sleep(20);
-      }
-
-      await sleep(1000);
-      terminal.innerHTML = '';
-
-      await print(">>\n>> > SYSTEM RESPONSE:", 120);
-      await sleep(7000);
-
-      const msg = "░░░ WE SEE YOU ░░░";
-      for (let i = 0; i < msg.length; i++) {
-        terminal.innerHTML += `<span class='red glitching' style='font-size:48px;'>${msg[i]}</span>`;
-        await sleep(200);
-      }
-
-      await sleep(5000);
-      terminal.innerHTML = '';
-      for (let i = 0; i < 200; i++) {
-        terminal.innerHTML += `<span class='red glitching' style='position:absolute; left:${Math.random()*100}%; top:${Math.random()*100}%;'>░░░ WE SEE YOU ░░░</span>`;
-        await sleep(10);
+      for (let i = 0; i < thoughts.length; i++) {
+        await sleep(800);
+        await print(`>> ${thoughts[i]}`, 70);
       }
 
       await sleep(2000);
       terminal.innerHTML = '';
+      await print(">> SYSTEM: connection lost...", 100);
+      await sleep(4000);
+      await typeStyledText("we're still here.", "fuchsia", 150);
     }
   </script>
 </body>
