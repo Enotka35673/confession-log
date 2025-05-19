@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CONFESSION LOG v.XVII</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: #00ffcc;
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .glitch {
+      position: relative;
+      color: #00ffcc;
+    }
+
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      clip: rect(0, 900px, 0, 0);
+    }
+
+    .glitch::before {
+      animation: glitchTop 2s infinite linear alternate-reverse;
+      color: #ff004c;
+    }
+
+    .glitch::after {
+      animation: glitchBottom 1.5s infinite linear alternate-reverse;
+      color: #00b7ff;
+    }
+
+    @keyframes glitchTop {
+      0% { clip: rect(0, 9999px, 0, 0); }
+      20% { clip: rect(0, 9999px, 12px, 0); }
+      40% { clip: rect(0, 9999px, 6px, 0); }
+      60% { clip: rect(0, 9999px, 10px, 0); }
+      80% { clip: rect(0, 9999px, 4px, 0); }
+      100% { clip: rect(0, 9999px, 14px, 0); }
+    }
+
+    @keyframes glitchBottom {
+      0% { clip: rect(0, 9999px, 0, 0); }
+      20% { clip: rect(14px, 9999px, 18px, 0); }
+      40% { clip: rect(10px, 9999px, 16px, 0); }
+      60% { clip: rect(6px, 9999px, 10px, 0); }
+      80% { clip: rect(2px, 9999px, 8px, 0); }
+      100% { clip: rect(0px, 9999px, 4px, 0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="glitch" data-text="> CONFESSION LOG v.XVII\A> ERROR: SOUL NOT FOUND\A> OUTPUT: NULL FAITH">
+    > CONFESSION LOG v.XVII<br>> ERROR: SOUL NOT FOUND<br>> OUTPUT: NULL FAITH
+  </div>
+</body>
+</html>
