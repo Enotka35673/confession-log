@@ -31,59 +31,47 @@
       font-size: 2em;
       position: relative;
       animation: glitch 2s infinite;
+      color: #ff00ff;
     }
 
     @keyframes glitch {
-      0% {
-        text-shadow: 2px 0 red, -2px 0 blue;
-      }
-      20% {
-        text-shadow: -2px 0 red, 2px 0 blue;
-      }
-      40% {
-        text-shadow: 2px 2px red, -2px -2px blue;
-      }
-      60% {
-        text-shadow: -2px -2px red, 2px 2px blue;
-      }
-      80% {
-        text-shadow: 0 0 red, 0 0 blue;
-      }
-      100% {
-        text-shadow: 2px 0 red, -2px 0 blue;
-      }
+      0% { text-shadow: 2px 0 #ff00ff, -2px 0 cyan; }
+      20% { text-shadow: -2px 0 cyan, 2px 0 white; }
+      40% { text-shadow: 2px 2px white, -2px -2px #00ffff; }
+      60% { text-shadow: -2px -2px #00ffff, 2px 2px #ffffff; }
+      80% { text-shadow: 0 0 white, 0 0 #00ffff; }
+      100% { text-shadow: 2px 0 #ff00ff, -2px 0 cyan; }
     }
 
     .content {
       max-width: 800px;
       margin-top: 2em;
-      white-space: pre-line;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+
+    .white { color: white; }
+    .cyan { color: #00ffff; }
+    .fuchsia-glitch {
+      color: #ff00ff;
+      animation: glitch 1.5s infinite;
     }
   </style>
 </head>
 <body>
   <img src="giphy.gif" alt="Glitch gif">
-  <div class="glitch">ERROR[CONFESSION LOG XVII]</div>
+  <div class="glitch">CONFESSION-LOG_0173 :: ACCESS GRANTED</div>
   <div class="content">
-    CONFESSION-LOG_0173 :: ACCESS GRANTED  
-    SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED  
-    
-    Parsing soul fragment...  
-    
-    [IN LUMEN VERITAS]  
-    . . .  
-    
-    ██ Data stream unstable ██  
-    
-    Salvation Attempt: FAILED  
-    
-    SUBJECT 0173: “I prayed. No one answered.”  
-    SUBJECT 0173: “I heard laughter in the static.”  
-    
-    Faith checksum: NULL  
-    
-    > SYSTEM RESPONSE:  
-         ░░░ WE SEE YOU ░░░
+    <p class="white">SYSTEM MESSAGE: <span class="fuchsia-glitch">ERROR_173: CONFESSION CORRUPTED</span></p>
+    <p class="cyan">Parsing soul fragment...</p>
+    <p class="white">[IN LUMEN VERITAS]</p>
+    <p>. . .</p>
+    <p class="fuchsia-glitch">██ Data stream unstable ██</p>
+    <p class="white">Salvation Attempt: <span class="cyan">FAILED</span></p>
+    <p>SUBJECT 0173: “I prayed. <span class="white">No one answered.</span>”</p>
+    <p>SUBJECT 0173: “I heard <span class="cyan">laughter</span> in the static.”</p>
+    <p class="white">Faith checksum: <span class="fuchsia-glitch">NULL</span></p>
+    <p>> SYSTEM RESPONSE:<br>     ░░░ <span class="fuchsia-glitch">WE SEE YOU</span> ░░░</p>
   </div>
 </body>
 </html>
