@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CONFESSION-LOG_0173</title>
+  <title>Confession Log XVII</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
     body {
@@ -11,136 +11,205 @@
       background-color: black;
       color: #00ffcc;
       font-family: 'VT323', monospace;
+      text-align: center;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 2em;
       overflow: hidden;
     }
-    #container {
-      max-width: 800px;
-      padding: 2em;
+
+    .terminal {
+      background: rgba(0, 0, 0, 0.6);
       border: 2px solid #00ffcc;
-      text-align: center;
+      padding: 1.5em;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 0 20px #00ffcc33;
       position: relative;
     }
+
+    .gif-container {
+      margin: 1em 0;
+    }
+
+    img {
+      width: 320px;
+      height: auto;
+      image-rendering: pixelated;
+    }
+
     .quote {
       color: fuchsia;
     }
-    .glitch-text {
+
+    .screamer {
       font-size: 3em;
       color: red;
-      animation: glitchAnim 0.3s infinite;
-      text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
-    }
-    @keyframes glitchAnim {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 2px); }
-      40% { transform: translate(2px, -2px); }
-      60% { transform: translate(-2px, -2px); }
-      80% { transform: translate(2px, 2px); }
-      100% { transform: translate(0); }
-    }
-    .hidden {
+      text-shadow: 0 0 10px red, 0 0 30px #ff0040;
+      animation: glitchyFlash 0.1s infinite alternate;
       display: none;
+      white-space: pre-wrap;
     }
-    img {
-      width: 320px;
-      image-rendering: pixelated;
-      margin-bottom: 1em;
+
+    @keyframes glitchyFlash {
+      0% { transform: translate(0, 0) skew(0deg); }
+      20% { transform: translate(-3px, 1px) skew(0.5deg); }
+      40% { transform: translate(3px, -2px) skew(-0.5deg); }
+      60% { transform: translate(-1px, 3px) skew(0.5deg); }
+      80% { transform: translate(1px, -1px) skew(-0.5deg); }
+      100% { transform: translate(0, 0) skew(0deg); }
+    }
+
+    #console-errors {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      font-size: 0.8em;
+      color: #ff0040;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 0.5em;
+      font-family: monospace;
+      border-top: 1px solid red;
     }
   </style>
 </head>
 <body>
-  <div id="container">
+  <div class="terminal">
     <pre id="text"></pre>
-    <img id="glitchGif" src="giphy.gif" alt="Glitch gif" class="hidden">
+    <div class="gif-container" style="display:none;">
+      <img src="giphy.gif" alt="Glitch gif">
+    </div>
+    <pre id="second-text" style="display:none;"></pre>
+    <div class="screamer" id="screamer">░░░ WE SEE YOU ░░░</div>
   </div>
-  <audio id="typeSound" src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Typewriter_key.ogg"></audio>
-  <audio id="bgHum" loop src="https://cdn.pixabay.com/download/audio/2023/03/13/audio_78016e640e.mp3?filename=data-murmur-140612.mp3"></audio>
-  <audio id="screamerSound" src="https://cdn.pixabay.com/download/audio/2022/10/20/audio_d5b369d7b7.mp3?filename=error-126627.mp3"></audio>
-
+  <div id="console-errors"></div>
+  <audio id="typeSound" src="typewriter.mp3" preload="auto"></audio>
+  <audio id="ambience" src="ambience.mp3" preload="auto" loop></audio>
+  <audio id="screamSound" src="scream.mp3" preload="auto"></audio>
   <script>
-    const fullText1 = `>> CONFESSION-LOG_0173 :: ACCESS GRANTED\n>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\nParsing soul fragment...\n\n[IN LUMEN VERITAS]\n. . .\n\n██ Data stream unstable ██\n\nSalvation Attempt: FAILED\n`;
-    const fullText2 = `>> SUBJECT 0173: “I prayed. No one answered.”\n>> SUBJECT 0173: “I heard laughter in the static.”\n\nFaith checksum: NULL\n`;
-    const finalMessage = `>> > SYSTEM RESPONSE:\n     ░░░ WE SEE YOU ░░░`;
+    const text = `>> CONFESSION-LOG_0173 :: ACCESS GRANTED\n>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\n>> Parsing soul fragment...\n\n>> [IN LUMEN VERITAS]\n>> . . .\n\n>> ██ Data stream unstable ██\n\n>> Salvation Attempt: FAILED`;
 
-    const typeSound = document.getElementById("typeSound");
-    const hum = document.getElementById("bgHum");
-    const screamerSound = document.getElementById("screamerSound");
-    const text = document.getElementById("text");
-    const gif = document.getElementById("glitchGif");
+    const secondText = `>> <span class="quote">SUBJECT 0173: “I prayed. No one answered.”</span>\n>> <span class="quote">SUBJECT 0173: “I heard laughter in the static.”</span>\n\n>> Faith checksum: NULL`;
 
-    let currentText = "";
-    let index = 0;
-    let currentPart = 1;
-    let typing = false;
+    const screamerText = `> SYSTEM RESPONSE:\n░░░ WE SEE YOU ░░░`;
 
-    function typeWriter(content, next) {
-      typing = true;
-      if (index < content.length) {
-        currentText += content.charAt(index);
-        text.innerText = currentText;
+    const element = document.getElementById('text');
+    const secondElement = document.getElementById('second-text');
+    const screamer = document.getElementById('screamer');
+    const gif = document.querySelector('.gif-container');
+    const consoleErrors = document.getElementById('console-errors');
 
-        // Sound
-        if (content.charAt(index) !== ' ' && content.charAt(index) !== '\n') {
-          typeSound.currentTime = 0;
-          typeSound.play();
-        }
+    const typeSound = document.getElementById('typeSound');
+    const ambience = document.getElementById('ambience');
+    const screamSound = document.getElementById('screamSound');
 
-        // Delay handling for "..."
-        let delay = 50;
-        if (content.substr(index, 3) === '...') {
-          delay = 500;
-        }
-
-        index++;
-        setTimeout(() => typeWriter(content, next), delay);
-      } else {
-        typing = false;
-        setTimeout(next, 2000);
-      }
-    }
-
-    function clearText(next) {
-      text.innerText = "";
-      currentText = "";
-      index = 0;
-      setTimeout(next, 1000);
-    }
-
-    function screamer() {
-      document.body.style.backgroundColor = "black";
-      gif.classList.add("hidden");
-      text.innerText = "";
-      const glitch = document.createElement("div");
-      glitch.classList.add("glitch-text");
-      glitch.innerText = "░░░ WE SEE YOU ░░░";
-      document.getElementById("container").appendChild(glitch);
-      screamerSound.play();
-    }
-
-    function startSequence() {
-      hum.play();
-      typeWriter(fullText1, () => {
-        clearText(() => {
-          gif.classList.remove("hidden");
-          typeWriter(fullText2, () => {
-            clearText(() => {
-              hum.pause();
-              hum.currentTime = 0;
-              screamer();
+    let allowAudio = false;
+    document.body.addEventListener('click', () => {
+      if (!allowAudio) {
+        allowAudio = true;
+        ambience.volume = 0.3;
+        ambience.play();
+        startTyping(text, element, () => {
+          setTimeout(() => {
+            element.textContent = '';
+            gif.style.display = 'block';
+            typeWithEffect(secondText, secondElement, () => {
+              setTimeout(() => {
+                gif.style.display = 'none';
+                secondElement.textContent = '';
+                ambience.pause();
+                screamer.style.display = 'block';
+                screamSound.play();
+                glitchOut();
+              }, 4000);
             });
-          });
+            secondElement.style.display = 'block';
+          }, 2000);
         });
-      });
-    }
-
-    document.body.addEventListener("click", () => {
-      if (!typing) {
-        startSequence();
       }
     });
+
+    function typeWithEffect(str, el, cb) {
+      let i = 0;
+      function typeChar() {
+        if (i < str.length) {
+          el.innerHTML += str[i];
+          typeSound.currentTime = 0;
+          typeSound.play();
+          i++;
+          let delay = 80;
+          if (str.slice(i-3, i) === '...') {
+            el.innerHTML = el.innerHTML.slice(0, -3);
+            blinkDots(el, 0, () => {
+              i += 0;
+              typeChar();
+            });
+          } else {
+            setTimeout(typeChar, delay);
+          }
+        } else if (cb) cb();
+      }
+      typeChar();
+    }
+
+    function blinkDots(el, count, done) {
+      if (count < 2) {
+        el.innerHTML += '.';
+        setTimeout(() => {
+          el.innerHTML = el.innerHTML.slice(0, -1);
+          setTimeout(() => blinkDots(el, count + 1, done), 200);
+        }, 400);
+      } else {
+        done();
+      }
+    }
+
+    function startTyping(str, el, cb) {
+      let i = 0;
+      function typeChar() {
+        if (i < str.length) {
+          el.textContent += str[i];
+          typeSound.currentTime = 0;
+          typeSound.play();
+          i++;
+          let delay = 90;
+          if (str.slice(i-3, i) === '...') {
+            el.textContent = el.textContent.slice(0, -3);
+            blinkDots(el, 0, () => {
+              i += 0;
+              typeChar();
+            });
+          } else {
+            setTimeout(typeChar, delay);
+          }
+        } else if (cb) cb();
+      }
+      typeChar();
+    }
+
+    function glitchOut() {
+      let fakeErrors = [
+        'FATAL EXCEPTION: daem0n.process(0173)',
+        '>>> REVELATIO INFERNI <<<',
+        'SIGSEGV at 0xDEADFAITH',
+        'C:\\souls\\core\\confess.dll is missing',
+        'PRAYER.EXE terminated unexpectedly',
+        'invoke(_abaddon, 666)',
+        '!!! UNHOLY STACK OVERFLOW !!!'
+      ];
+      let index = 0;
+      let interval = setInterval(() => {
+        if (index >= fakeErrors.length) {
+          clearInterval(interval);
+        } else {
+          consoleErrors.textContent += '\n' + fakeErrors[index++];
+        }
+      }, 500);
+    }
   </script>
 </body>
 </html>
