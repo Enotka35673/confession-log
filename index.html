@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Confession Log XVII</title>
+  <title>CONFESSION-LOG_0173</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
+      padding: 2em;
       background-color: black;
       color: #00ffee;
       font-family: 'VT323', monospace;
+      font-size: 1.4em;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      padding: 2em;
-      overflow-y: scroll;
+      text-align: left;
     }
 
     img {
@@ -27,50 +26,71 @@
       image-rendering: pixelated;
     }
 
-    .typewriter {
-      border-right: 2px solid #00ffee;
+    #output {
       white-space: pre-wrap;
-      overflow: hidden;
-      font-size: 1.5em;
-      text-align: left;
       max-width: 800px;
+      line-height: 1.6;
     }
 
-    .highlight {
-      color: #ff55ff;
-      animation: glitch-color 1s infinite alternate;
+    .quote {
+      color: #ff66cc;
     }
 
-    .threat {
-      font-size: 2.5em;
-      color: #ff55ff;
-      text-shadow: 0 0 10px #ff55ff, 0 0 20px #00ffee, 0 0 30px #ff55ff;
-      animation: glitch-threat 0.3s infinite;
+    .glitch-end {
+      font-size: 3em;
+      color: #ff0055;
+      text-align: center;
       margin-top: 2em;
+      animation: glitch-end 0.4s infinite;
+      display: none;
+      white-space: pre-wrap;
     }
 
-    @keyframes glitch-color {
-      0% { color: #ff55ff; }
-      33% { color: #ffffff; }
-      66% { color: #00ffee; }
-      100% { color: #ff55ff; }
+    @keyframes glitch-end {
+      0% {
+        transform: translate(0);
+        text-shadow: 2px 0 red, -2px 0 blue;
+      }
+      20% {
+        transform: translate(-3px, 2px);
+        text-shadow: -2px 0 red, 2px 0 blue;
+      }
+      40% {
+        transform: translate(3px, -1px);
+        text-shadow: 2px 2px red, -2px -2px blue;
+      }
+      60% {
+        transform: translate(-1px, 1px);
+        text-shadow: -1px -1px red, 1px 1px blue;
+      }
+      80% {
+        transform: translate(2px, -3px);
+        text-shadow: 0 0 red, 0 0 blue;
+      }
+      100% {
+        transform: translate(0);
+        text-shadow: 2px 0 red, -2px 0 blue;
+      }
     }
 
-    @keyframes glitch-threat {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 2px); }
-      40% { transform: translate(2px, -2px); }
-      60% { transform: translate(-1px, 1px); }
-      80% { transform: translate(1px, -1px); }
-      100% { transform: translate(0); }
+    @keyframes screenFlicker {
+      0% { opacity: 1; }
+      5% { opacity: 0.7; }
+      10% { opacity: 1; }
+      15% { opacity: 0.6; }
+      20% { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    .flicker {
+      animation: screenFlicker 2s infinite;
     }
   </style>
 </head>
 <body>
   <img src="giphy.gif" alt="Glitch gif">
-  <div id="log" class="typewriter"></div>
-  <div id="threat" class="threat" style="display: none;">░░░ WE SEE YOU ░░░</div>
-
+  <div id="output" class="flicker"></div>
+  <div id="glitchEnd" class="glitch-end">░░░ WE SEE YOU ░░░</div>
   <script>
     const text = `CONFESSION-LOG_0173 :: ACCESS GRANTED  
 SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED  
@@ -84,35 +104,40 @@ Parsing soul fragment...
 
 Salvation Attempt: FAILED  
 
-SUBJECT 0173: “I prayed. No one answered.”  
-SUBJECT 0173: “I heard laughter in the static.”  
+SUBJECT 0173: <span class="quote">“I prayed. No one answered.”</span>  
+SUBJECT 0173: <span class="quote">“I heard laughter in the static.”</span>  
 
 Faith checksum: NULL  
 
 > SYSTEM RESPONSE:  
      ░░░ WE SEE YOU ░░░`;
 
-    const output = document.getElementById('log');
-    const threat = document.getElementById('threat');
-    let index = 0;
+    const output = document.getElementById('output');
+    const glitchEnd = document.getElementById('glitchEnd');
 
-    function typeChar() {
-      if (index < text.length) {
-        output.textContent += text.charAt(index);
-        index++;
-        let delay = 40;
+    let i = 0;
+    function typeText() {
+      if (i < text.length) {
+        const char = text[i];
+        output.innerHTML += char;
 
-        // Dramatic pauses after periods, colons, or newlines
-        if (text.charAt(index - 1) === '.' || text.charAt(index - 1) === ':' || text.charAt(index - 1) === '\n') {
-          delay = 300;
+        if (char === '.') {
+          setTimeout(typeText, 200);
+        } else if (char === '\n') {
+          setTimeout(typeText, 300);
+        } else {
+          setTimeout(typeText, Math.random() * 40 + 20);
         }
-        setTimeout(typeChar, delay);
+        i++;
       } else {
-        threat.style.display = 'block';
+        // после таймаута появляется глитч-надпись
+        setTimeout(() => {
+          glitchEnd.style.display = 'block';
+        }, 1000);
       }
     }
 
-    window.onload = () => setTimeout(typeChar, 500);
+    window.onload = typeText;
   </script>
 </body>
 </html>
