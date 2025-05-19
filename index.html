@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,54 +10,58 @@
     html, body {
       margin: 0;
       padding: 0;
-      background: black;
+      background-color: black;
       color: white;
       font-family: 'VT323', monospace;
+      height: 100%;
       overflow: hidden;
-      height: 100vh;
     }
 
-    .screen {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .console {
+    #frame {
       border: 2px solid white;
-      padding: 2rem;
-      width: 80vw;
-      height: 60vh;
+      padding: 20px;
+      width: 80%;
       max-width: 800px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      height: 400px;
+      margin: 50px auto;
       position: relative;
+      box-sizing: border-box;
       overflow: hidden;
+      animation: floating 4s infinite ease-in-out;
     }
 
-    .start-button {
+    @keyframes floating {
+      0%, 100% {
+        transform: translate(0, 0);
+      }
+      50% {
+        transform: translate(1px, -1px);
+      }
+    }
+
+    #startBtn {
+      padding: 10px 20px;
       border: 2px solid white;
-      padding: 1rem 2rem;
+      color: white;
+      background: none;
+      font-size: 1.5em;
       cursor: pointer;
-      font-size: 1.5rem;
-    }
-
-    .hidden { display: none; }
-
-    #text-output {
-      white-space: pre-wrap;
-      font-size: 1.25rem;
-      line-height: 1.6;
+      font-family: 'VT323', monospace;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .fuchsia {
       color: fuchsia;
     }
 
-    .red {
-      color: red;
+    #gif {
+      display: none;
+      width: 100%;
+      height: auto;
+      margin-top: 10px;
     }
 
     .glitch {
@@ -66,105 +71,87 @@
     @keyframes glitch {
       0% { transform: translate(0); }
       20% { transform: translate(-1px, 1px); }
-      40% { transform: translate(-1px, -1px); }
-      60% { transform: translate(1px, 1px); }
-      80% { transform: translate(1px, -1px); }
+      40% { transform: translate(1px, -1px); }
+      60% { transform: translate(-1px, -2px); }
+      80% { transform: translate(1px, 2px); }
       100% { transform: translate(0); }
     }
 
-    .floating {
-      animation: float 5s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    .gif-container img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 1rem auto 0 auto;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
+
 <body>
-  <div class="screen">
-    <div class="console floating">
-      <div id="starter">
-        <div class="start-button" onclick="startExperience()">Click to start...</div>
-      </div>
-      <div id="text-output" class="hidden"></div>
-    </div>
+  <div id="frame">
+    <button id="startBtn">Click to start...</button>
+    <pre id="output"></pre>
+    <img id="gif" src="giphy.gif" alt="glitch gif">
   </div>
 
   <script>
-    const output = document.getElementById('text-output');
-    const starter = document.getElementById('starter');
+    const startBtn = document.getElementById('startBtn');
+    const output = document.getElementById('output');
+    const gif = document.getElementById('gif');
 
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    const stage1 = `>> CONFESSION-LOG_0173 :: ACCESS GRANTED\n>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\n>> Parsing soul fragment...\n\n>> [IN LUMEN VERITAS]\n. . .\n\n>> ██ Data stream unstable ██\n\n>> Salvation Attempt: FAILED\n\n`;
 
-    async function typeText(text, delay = 70, className = '') {
-      if (className) output.innerHTML += `<span class="${className}">`;
+    const stage2 = `>> SUBJECT 0173: <span class='fuchsia'>“I prayed. No one answered.”</span>\n>> SUBJECT 0173: <span class='fuchsia'>“I heard laughter in the static.”</span>\n\n>> Faith checksum: NULL\n\n`;
+
+    const stage3 = `>> > SYSTEM RESPONSE:`;
+
+    const finalText = `░░░ WE SEE YOU ░░░`;
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function typeText(text, el, delayTime = 50) {
+      el.innerHTML = '';
       for (let i = 0; i < text.length; i++) {
-        output.innerHTML += text[i];
-        if (text[i] === '.' && text[i+1] === '.' && text[i+2] === '.') {
-          await slowDots();
-          i += 2;
-        } else {
-          await sleep(delay);
+        el.innerHTML += text[i];
+        if (text[i] === '.' && text[i+1] === ' ' && text[i+2] === '.') {
+          await delay(1000);
         }
-      }
-      if (className) output.innerHTML += `</span>`;
-      output.innerHTML += "\n";
-    }
-
-    async function slowDots() {
-      for (let i = 0; i < 2; i++) {
-        output.innerHTML += '.';
-        await sleep(1000);
-      }
-      output.innerHTML = output.innerHTML.slice(0, -2);
-      await sleep(1000);
-      for (let i = 0; i < 2; i++) {
-        output.innerHTML += '.';
-        await sleep(1000);
+        await delay(delayTime);
       }
     }
 
-    async function startExperience() {
-      starter.classList.add('hidden');
-      output.classList.remove('hidden');
-
-      await typeText(">> CONFESSION-LOG_0173 :: ACCESS GRANTED");
-      await typeText(">> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED");
-      await typeText(">>  ");
-      await typeText(">> Parsing soul fragment...");
-      await typeText(">>  ");
-      await typeText(">> [IN LUMEN VERITAS]");
-      await typeText(">> . . .");
-      await typeText(">>  ");
-      await typeText(">> ██ Data stream unstable ██");
-      await typeText(">>  ");
-      await typeText(">> Salvation Attempt: FAILED");
-
-      await sleep(1000);
-      output.innerHTML = "";
-
-      await sleep(1000);
-      await typeText(">> SUBJECT 0173: ", 40);
-      await typeText("\“I prayed. No one answered.\”", 120, 'fuchsia');
-      await sleep(2000);
-      await typeText(">> SUBJECT 0173: ", 40);
-      await typeText("\“I heard laughter in the static.\”", 120, 'fuchsia');
-      await typeText(">>  ");
-      await typeText(">> Faith checksum: NULL");
-
-      const img = document.createElement('img');
-      img.src = 'giphy.gif';
-      document.querySelector('.console').appendChild(img);
+    async function startSequence() {
+      startBtn.style.display = 'none';
+      await typeText(stage1, output, 50);
+      await delay(1000);
+      output.innerHTML = '';
+      await delay(1000);
+      gif.style.display = 'block';
+      await typeText(stage2, output, 80);
+      await delay(3000);
+      output.innerHTML = '';
+      gif.style.display = 'none';
+      await typeText(stage3, output, 60);
+      await delay(7000);
+      document.body.innerHTML = '<div id="frame" class="glitch"><pre style="color:red; font-size:2em; text-align:center">' + finalText + '</pre></div>';
+      setTimeout(() => {
+        const junk = setInterval(() => {
+          const div = document.createElement('div');
+          div.style.position = 'absolute';
+          div.style.top = Math.random() * window.innerHeight + 'px';
+          div.style.left = Math.random() * window.innerWidth + 'px';
+          div.style.color = 'red';
+          div.style.fontSize = '1em';
+          div.innerText = finalText;
+          document.body.appendChild(div);
+        }, 100);
+        setTimeout(() => {
+          clearInterval(junk);
+          document.body.innerHTML = '<div style="background:black; width:100%; height:100%;"></div>';
+        }, 3000);
+      }, 5000);
     }
+
+    startBtn.addEventListener('click', startSequence);
   </script>
 </body>
+
 </html>
