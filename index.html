@@ -3,182 +3,168 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Confession Log XVII</title>
+  <title>CONFESSION-LOG_0173</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
-    body {
+    html, body {
       margin: 0;
-      background-color: black;
-      color: #00ffcc;
+      padding: 0;
+      background: black;
+      color: white;
       font-family: 'VT323', monospace;
-      text-align: center;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    .screen {
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .console {
+      border: 2px solid white;
+      padding: 2rem;
+      width: 80vw;
+      height: 60vh;
+      max-width: 800px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
       overflow: hidden;
     }
 
-    #container {
-      max-width: 800px;
-      padding: 2em;
-      border: 1px solid #00ffcc;
-      box-shadow: 0 0 10px #00ffcc33;
+    .start-button {
+      border: 2px solid white;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      font-size: 1.5rem;
     }
 
-    #output {
+    .hidden { display: none; }
+
+    #text-output {
       white-space: pre-wrap;
-      word-break: break-word;
-      font-size: 1.4em;
+      font-size: 1.25rem;
+      line-height: 1.6;
     }
 
-    .quote {
+    .fuchsia {
       color: fuchsia;
     }
 
+    .red {
+      color: red;
+    }
+
     .glitch {
-      color: #ff00ff;
-      font-size: 2em;
-      text-shadow: 0 0 5px #ff00ff, 0 0 10px #00ffff, 0 0 20px #0000ff;
-      animation: glitch 0.3s infinite;
+      animation: glitch 1s infinite;
     }
 
     @keyframes glitch {
-      0% {
-        transform: translate(0);
-      }
-      20% {
-        transform: translate(-2px, 2px);
-      }
-      40% {
-        transform: translate(2px, -2px);
-      }
-      60% {
-        transform: translate(-1px, 1px);
-      }
-      80% {
-        transform: translate(1px, -1px);
-      }
-      100% {
-        transform: translate(0);
-      }
+      0% { transform: translate(0); }
+      20% { transform: translate(-1px, 1px); }
+      40% { transform: translate(-1px, -1px); }
+      60% { transform: translate(1px, 1px); }
+      80% { transform: translate(1px, -1px); }
+      100% { transform: translate(0); }
     }
 
-    #screamer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      color: red;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 4em;
-      text-shadow: 0 0 10px red, 0 0 20px white;
-      animation: glitch 0.2s infinite;
-      z-index: 1000;
-      display: none;
+    .floating {
+      animation: float 5s ease-in-out infinite;
     }
 
-    #startBtn {
-      color: #00ffcc;
-      background: none;
-      border: 1px solid #00ffcc;
-      padding: 0.5em 1em;
-      font-size: 1.2em;
-      cursor: pointer;
-      font-family: 'VT323', monospace;
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .gif-container img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 1rem auto 0 auto;
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <img id="glitchGif" src="giphy.gif" alt="Glitch gif" style="width: 320px; height: auto; image-rendering: pixelated; display: none;">
-    <div id="output"></div>
-    <button id="startBtn">Click to start</button>
+  <div class="screen">
+    <div class="console floating">
+      <div id="starter">
+        <div class="start-button" onclick="startExperience()">Click to start...</div>
+      </div>
+      <div id="text-output" class="hidden"></div>
+    </div>
   </div>
-  <div id="screamer">░░░ WE SEE YOU ░░░</div>
-
-  <audio id="typeSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_43a42d3406.mp3?filename=keyboard-typing-199731.mp3"></audio>
-  <audio id="ambientSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_38699640e7.mp3?filename=dark-ambient-110174.mp3" loop></audio>
-  <audio id="screamSound" src="https://cdn.pixabay.com/download/audio/2022/03/01/audio_0a1e54d6a1.mp3?filename=screaming-178844.mp3"></audio>
 
   <script>
-    const output = document.getElementById('output');
-    const typeSound = document.getElementById('typeSound');
-    const ambientSound = document.getElementById('ambientSound');
-    const screamSound = document.getElementById('screamSound');
-    const gif = document.getElementById('glitchGif');
-    const screamer = document.getElementById('screamer');
-    const startBtn = document.getElementById('startBtn');
+    const output = document.getElementById('text-output');
+    const starter = document.getElementById('starter');
 
-    const textParts = [
-      `>> CONFESSION-LOG_0173 :: ACCESS GRANTED\n>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\n>> Parsing soul fragment...\n\n>> [IN LUMEN VERITAS]\n. . .\n\n██ Data stream unstable ██\n\nSalvation Attempt: FAILED\n`,
-      `>> SUBJECT 0173: “<span class='quote'>I prayed. No one answered.</span>”\n>> SUBJECT 0173: “<span class='quote'>I heard laughter in the static.</span>”\n\n>> Faith checksum: NULL\n`,
-      `>> > SYSTEM RESPONSE:\n░░░ WE SEE YOU ░░░`
-    ];
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-    let part = 0;
-    let charIndex = 0;
-
-    async function typeText() {
-      if (part >= textParts.length) return;
-      let current = textParts[part];
-      charIndex = 0;
-      output.innerHTML = '';
-
-      while (charIndex < current.length) {
-        let char = current[charIndex];
-        output.innerHTML += char;
-
-        if (char !== ' ' && char !== '\n') typeSound.play().catch(() => {});
-
-        if (char === '.' && current.slice(charIndex, charIndex + 3) === '...') {
-          await new Promise(r => setTimeout(r, 400));
-          output.innerHTML = output.innerHTML.slice(0, -3);
-          await new Promise(r => setTimeout(r, 300));
-          output.innerHTML += '...';
-          await new Promise(r => setTimeout(r, 300));
-          output.innerHTML = output.innerHTML.slice(0, -3);
-          await new Promise(r => setTimeout(r, 300));
-          output.innerHTML += '...';
-          charIndex += 3;
+    async function typeText(text, delay = 70, className = '') {
+      if (className) output.innerHTML += `<span class="${className}">`;
+      for (let i = 0; i < text.length; i++) {
+        output.innerHTML += text[i];
+        if (text[i] === '.' && text[i+1] === '.' && text[i+2] === '.') {
+          await slowDots();
+          i += 2;
         } else {
-          await new Promise(r => setTimeout(r, 45));
-          charIndex++;
+          await sleep(delay);
         }
       }
+      if (className) output.innerHTML += `</span>`;
+      output.innerHTML += "\n";
+    }
 
-      if (part === 0) {
-        await new Promise(r => setTimeout(r, 1200));
-        output.innerHTML = '';
-        gif.style.display = 'block';
-        part++;
-        await typeText();
-      } else if (part === 1) {
-        await new Promise(r => setTimeout(r, 1600));
-        output.innerHTML = '';
-        gif.style.display = 'none';
-        part++;
-        await typeText();
-      } else if (part === 2) {
-        await new Promise(r => setTimeout(r, 2000));
-        ambientSound.pause();
-        output.innerHTML = '';
-        screamer.style.display = 'flex';
-        screamSound.play();
+    async function slowDots() {
+      for (let i = 0; i < 2; i++) {
+        output.innerHTML += '.';
+        await sleep(1000);
+      }
+      output.innerHTML = output.innerHTML.slice(0, -2);
+      await sleep(1000);
+      for (let i = 0; i < 2; i++) {
+        output.innerHTML += '.';
+        await sleep(1000);
       }
     }
 
-    startBtn.addEventListener('click', () => {
-      startBtn.style.display = 'none';
-      ambientSound.volume = 0.3;
-      ambientSound.play().catch(() => {});
-      typeText();
-    });
+    async function startExperience() {
+      starter.classList.add('hidden');
+      output.classList.remove('hidden');
+
+      await typeText(">> CONFESSION-LOG_0173 :: ACCESS GRANTED");
+      await typeText(">> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED");
+      await typeText(">>  ");
+      await typeText(">> Parsing soul fragment...");
+      await typeText(">>  ");
+      await typeText(">> [IN LUMEN VERITAS]");
+      await typeText(">> . . .");
+      await typeText(">>  ");
+      await typeText(">> ██ Data stream unstable ██");
+      await typeText(">>  ");
+      await typeText(">> Salvation Attempt: FAILED");
+
+      await sleep(1000);
+      output.innerHTML = "";
+
+      await sleep(1000);
+      await typeText(">> SUBJECT 0173: ", 40);
+      await typeText("\“I prayed. No one answered.\”", 120, 'fuchsia');
+      await sleep(2000);
+      await typeText(">> SUBJECT 0173: ", 40);
+      await typeText("\“I heard laughter in the static.\”", 120, 'fuchsia');
+      await typeText(">>  ");
+      await typeText(">> Faith checksum: NULL");
+
+      const img = document.createElement('img');
+      img.src = 'giphy.gif';
+      document.querySelector('.console').appendChild(img);
+    }
   </script>
 </body>
 </html>
