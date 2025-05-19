@@ -28,82 +28,84 @@
       image-rendering: pixelated;
     }
 
-    .content {
+    .terminal {
       max-width: 800px;
-      margin-top: 2em;
-      white-space: pre-wrap;
-      line-height: 1.6;
+      white-space: pre-line;
+      text-align: left;
+      color: #00ffcc;
+      font-size: 1.5em;
+      overflow-y: auto;
+      max-height: 70vh;
+      padding-right: 1em;
+      animation: scroll 20s linear forwards;
     }
 
-    .error { color: #ff004d; }
-    .system { color: #00ffff; }
-    .soul { color: #ff00ff; }
-    .subject { color: #ffffff; font-style: italic; }
+    @keyframes scroll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-30%); }
+    }
+
     .glitch {
-      font-size: 3em;
-      color: #ff00ff;
       position: relative;
-      animation: glitchText 0.3s infinite;
-      text-shadow: 0 0 5px #ff00ff, 0 0 10px #00ffff;
+      color: #ff00ff;
+      font-size: 3em;
+      animation: glitch 1s infinite linear;
       margin-top: 2em;
     }
 
-    @keyframes glitchText {
-      0% { transform: translate(0); opacity: 1; }
-      20% { transform: translate(-1px, 1px); opacity: 0.95; }
-      40% { transform: translate(1px, -1px); opacity: 1; }
-      60% { transform: translate(-2px, 2px); opacity: 0.9; }
-      80% { transform: translate(2px, -2px); opacity: 1; }
-      100% { transform: translate(0); opacity: 1; }
+    @keyframes glitch {
+      0% {
+        text-shadow: 2px 0 magenta, -2px 0 cyan;
+      }
+      20% {
+        text-shadow: -3px 0 red, 3px 0 blue;
+      }
+      40% {
+        text-shadow: 2px 2px lime, -2px -2px blue;
+      }
+      60% {
+        text-shadow: -2px -2px red, 2px 2px cyan;
+      }
+      80% {
+        text-shadow: 0 0 red, 0 0 blue;
+      }
+      100% {
+        text-shadow: 2px 0 red, -2px 0 blue;
+      }
     }
 
-    .scanlines::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.05),
-        rgba(0, 0, 0, 0.05) 2px,
-        transparent 2px,
-        transparent 4px
-      );
-      pointer-events: none;
-      z-index: 2;
+    .highlight {
+      color: #ff00ff;
+      text-shadow: 0 0 5px #fff, 0 0 10px cyan;
+      font-weight: bold;
+    }
+
+    .warning {
+      color: red;
+      font-weight: bold;
+      animation: flicker 1.2s infinite alternate;
     }
 
     @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-      }
-      20%, 22%, 24%, 55% {
-        opacity: 0.3;
-      }
-    }
-
-    .content span {
-      display: inline-block;
-      animation: flicker 3s infinite;
+      from { opacity: 1; }
+      to { opacity: 0.3; }
     }
   </style>
 </head>
-<body class="scanlines">
+<body>
   <img src="giphy.gif" alt="Glitch gif">
-  <div class="content">
-    <span class="system">CONFESSION-LOG_0173 :: ACCESS GRANTED</span><br>
-    <span class="error">SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED</span><br><br>
-    <span class="system">Parsing soul fragment...</span><br><br>
-    <span class="soul">[IN LUMEN VERITAS]</span><br>
-    <span class="error">. . .</span><br><br>
-    <span class="error">██ Data stream unstable ██</span><br><br>
-    <span class="error">Salvation Attempt: FAILED</span><br><br>
-    <span class="subject">SUBJECT 0173: “I prayed. No one answered.”</span><br>
-    <span class="subject">SUBJECT 0173: “I heard laughter in the static.”</span><br><br>
-    <span class="error">Faith checksum: NULL</span><br><br>
-    <span class="system">&gt; SYSTEM RESPONSE:</span><br>
+  <div class="terminal">
+    <p><span class="highlight">CONFESSION-LOG_0173 :: ACCESS GRANTED</span><br>
+    SYSTEM MESSAGE: <span class="warning">ERROR_173: CONFESSION CORRUPTED</span><br><br>
+    Parsing soul fragment...<br><br>
+    <span class="highlight">[IN LUMEN VERITAS]</span><br>
+    . . .<br><br>
+    ██ Data stream unstable ██<br><br>
+    Salvation Attempt: <span class="warning">FAILED</span><br><br>
+    SUBJECT 0173: “I prayed. No one answered.”<br>
+    SUBJECT 0173: “I heard laughter in the static.”<br><br>
+    Faith checksum: NULL<br><br>
+    > SYSTEM RESPONSE:</p>
   </div>
   <div class="glitch">░░░ WE SEE YOU ░░░</div>
 </body>
