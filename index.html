@@ -18,6 +18,7 @@
       justify-content: start;
       min-height: 100vh;
       padding: 2em;
+      overflow: hidden;
     }
 
     img {
@@ -30,121 +31,80 @@
     .content {
       max-width: 800px;
       margin-top: 2em;
+      white-space: pre-wrap;
+      line-height: 1.6;
     }
 
-    .entry {
-      font-size: 1.5em;
-      margin: 0.5em 0;
-    }
-
-    .glitch-text {
-      position: relative;
-      color: #00ffff;
-    }
-
-    .glitch-text::before,
-    .glitch-text::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0;
-      width: 100%;
-      opacity: 0.5;
-    }
-
-    .glitch-text::before {
-      color: #ff00ff;
-      animation: glitchTop 0.4s infinite linear alternate-reverse;
-    }
-
-    .glitch-text::after {
-      color: #00ffff;
-      animation: glitchBottom 0.4s infinite linear alternate-reverse;
-    }
-
-    @keyframes glitchTop {
-      0% { transform: translate(0, 0); }
-      25% { transform: translate(-2px, -2px); }
-      50% { transform: translate(2px, 0); }
-      75% { transform: translate(0, 2px); }
-      100% { transform: translate(0, 0); }
-    }
-
-    @keyframes glitchBottom {
-      0% { transform: translate(0, 0); }
-      25% { transform: translate(2px, 2px); }
-      50% { transform: translate(-2px, 0); }
-      75% { transform: translate(0, -2px); }
-      100% { transform: translate(0, 0); }
-    }
-
-    .highlight {
-      color: #ffffff;
-    }
-
-    .error {
-      color: #ff00ff;
-    }
-
-    .corruption {
-      color: #ff5555;
-    }
-
-    .static {
-      color: #8888ff;
-      font-style: italic;
-    }
-
-    .we-see-you {
+    .error { color: #ff004d; }
+    .system { color: #00ffff; }
+    .soul { color: #ff00ff; }
+    .subject { color: #ffffff; font-style: italic; }
+    .glitch {
       font-size: 3em;
-      margin-top: 2em;
-      color: white;
+      color: #ff00ff;
       position: relative;
-      animation: pulse 1.5s infinite;
+      animation: glitchText 0.3s infinite;
+      text-shadow: 0 0 5px #ff00ff, 0 0 10px #00ffff;
+      margin-top: 2em;
     }
 
-    .we-see-you::before,
-    .we-see-you::after {
-      content: attr(data-text);
+    @keyframes glitchText {
+      0% { transform: translate(0); opacity: 1; }
+      20% { transform: translate(-1px, 1px); opacity: 0.95; }
+      40% { transform: translate(1px, -1px); opacity: 1; }
+      60% { transform: translate(-2px, 2px); opacity: 0.9; }
+      80% { transform: translate(2px, -2px); opacity: 1; }
+      100% { transform: translate(0); opacity: 1; }
+    }
+
+    .scanlines::after {
+      content: '';
       position: absolute;
+      top: 0;
       left: 0;
       width: 100%;
-      opacity: 0.8;
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.05),
+        rgba(0, 0, 0, 0.05) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+      pointer-events: none;
+      z-index: 2;
     }
 
-    .we-see-you::before {
-      color: #ff00ff;
-      animation: glitchTop 0.2s infinite linear alternate-reverse;
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 22%, 24%, 55% {
+        opacity: 0.3;
+      }
     }
 
-    .we-see-you::after {
-      color: #00ffff;
-      animation: glitchBottom 0.2s infinite linear alternate-reverse;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+    .content span {
+      display: inline-block;
+      animation: flicker 3s infinite;
     }
   </style>
 </head>
-<body>
+<body class="scanlines">
   <img src="giphy.gif" alt="Glitch gif">
   <div class="content">
-    <p class="entry highlight">CONFESSION-LOG_0173 :: ACCESS GRANTED</p>
-    <p class="entry error">SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED</p>
-    <p class="entry">Parsing soul fragment...</p>
-    <br>
-    <p class="entry highlight">[IN LUMEN VERITAS]</p>
-    <p class="entry">. . .</p>
-    <br>
-    <p class="entry corruption">██ Data stream unstable ██</p>
-    <p class="entry error">Salvation Attempt: FAILED</p>
-    <br>
-    <p class="entry static">SUBJECT 0173: “I prayed. No one answered.”</p>
-    <p class="entry static">SUBJECT 0173: “I heard laughter in the static.”</p>
-    <br>
-    <p class="entry error">Faith checksum: NULL</p>
-    <div class="we-see-you" data-text="░░░ WE SEE YOU ░░░">░░░ WE SEE YOU ░░░</div>
+    <span class="system">CONFESSION-LOG_0173 :: ACCESS GRANTED</span><br>
+    <span class="error">SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED</span><br><br>
+    <span class="system">Parsing soul fragment...</span><br><br>
+    <span class="soul">[IN LUMEN VERITAS]</span><br>
+    <span class="error">. . .</span><br><br>
+    <span class="error">██ Data stream unstable ██</span><br><br>
+    <span class="error">Salvation Attempt: FAILED</span><br><br>
+    <span class="subject">SUBJECT 0173: “I prayed. No one answered.”</span><br>
+    <span class="subject">SUBJECT 0173: “I heard laughter in the static.”</span><br><br>
+    <span class="error">Faith checksum: NULL</span><br><br>
+    <span class="system">&gt; SYSTEM RESPONSE:</span><br>
   </div>
+  <div class="glitch">░░░ WE SEE YOU ░░░</div>
 </body>
 </html>
