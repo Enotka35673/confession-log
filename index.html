@@ -3,110 +3,122 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Confession Log XVII</title>
+  <title>CONFESSION-LOG_0173</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       background-color: black;
-      color: #00ffcc;
+      color: #00ffe7;
       font-family: 'VT323', monospace;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: start;
-      min-height: 100vh;
       padding: 2em;
-      overflow: hidden;
+      overflow-y: scroll;
     }
 
     img {
+      display: block;
+      margin: 0 auto 2em;
       width: 320px;
       height: auto;
-      margin-bottom: 2em;
       image-rendering: pixelated;
     }
 
-    .terminal {
+    .console {
       max-width: 800px;
-      white-space: pre-line;
-      text-align: left;
-      color: #00ffcc;
+      margin: 0 auto;
+      white-space: pre-wrap;
       font-size: 1.5em;
-      overflow-y: auto;
-      max-height: 70vh;
-      padding-right: 1em;
-      animation: scroll 20s linear forwards;
+      line-height: 1.6;
     }
 
-    @keyframes scroll {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-30%); }
-    }
-
-    .glitch {
-      position: relative;
-      color: #ff00ff;
+    .glitch-final {
       font-size: 3em;
-      animation: glitch 1s infinite linear;
+      color: #ff00ff;
+      text-align: center;
       margin-top: 2em;
+      position: relative;
+      animation: glitch-finale 1.5s infinite;
     }
 
-    @keyframes glitch {
+    @keyframes glitch-finale {
       0% {
-        text-shadow: 2px 0 magenta, -2px 0 cyan;
+        text-shadow: 2px 0 #00fff2, -2px 0 #ff00ff;
       }
       20% {
-        text-shadow: -3px 0 red, 3px 0 blue;
+        text-shadow: -2px 2px #00fff2, 2px -2px #ff00ff;
       }
       40% {
-        text-shadow: 2px 2px lime, -2px -2px blue;
+        text-shadow: 2px -2px #00fff2, -2px 2px #ff00ff;
       }
       60% {
-        text-shadow: -2px -2px red, 2px 2px cyan;
+        text-shadow: 0 0 #ff00ff, 0 0 #00fff2;
       }
       80% {
-        text-shadow: 0 0 red, 0 0 blue;
+        text-shadow: -1px -1px #00fff2, 1px 1px #ff00ff;
       }
       100% {
-        text-shadow: 2px 0 red, -2px 0 blue;
+        text-shadow: 2px 0 #00fff2, -2px 0 #ff00ff;
       }
     }
 
-    .highlight {
-      color: #ff00ff;
-      text-shadow: 0 0 5px #fff, 0 0 10px cyan;
-      font-weight: bold;
+    .typewriter {
+      border-right: 2px solid #00ffe7;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation: typing 3s steps(40, end) forwards, blink 0.75s step-end infinite;
     }
 
-    .warning {
-      color: red;
-      font-weight: bold;
-      animation: flicker 1.2s infinite alternate;
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
     }
 
-    @keyframes flicker {
-      from { opacity: 1; }
-      to { opacity: 0.3; }
+    @keyframes blink {
+      from, to { border-color: transparent }
+      50% { border-color: #00ffe7 }
     }
+
+    .thinking {
+      display: inline-block;
+      animation: thinkingDots 2.5s steps(4, end) infinite;
+    }
+
+    @keyframes thinkingDots {
+      0% { content: ""; }
+      25% { content: "."; }
+      50% { content: ".."; }
+      75% { content: "..."; }
+      100% { content: ""; }
+    }
+
   </style>
 </head>
 <body>
   <img src="giphy.gif" alt="Glitch gif">
-  <div class="terminal">
-    <p><span class="highlight">CONFESSION-LOG_0173 :: ACCESS GRANTED</span><br>
-    SYSTEM MESSAGE: <span class="warning">ERROR_173: CONFESSION CORRUPTED</span><br><br>
-    Parsing soul fragment...<br><br>
-    <span class="highlight">[IN LUMEN VERITAS]</span><br>
-    . . .<br><br>
-    ██ Data stream unstable ██<br><br>
-    Salvation Attempt: <span class="warning">FAILED</span><br><br>
-    SUBJECT 0173: “I prayed. No one answered.”<br>
-    SUBJECT 0173: “I heard laughter in the static.”<br><br>
-    Faith checksum: NULL<br><br>
-    > SYSTEM RESPONSE:</p>
+  <div class="console">
+    <div class="typewriter">
+CONFESSION-LOG_0173 :: ACCESS GRANTED
+SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED
+
+Parsing soul fragment...
+
+[IN LUMEN VERITAS]
+. . .
+
+██ Data stream unstable ██
+
+Salvation Attempt: FAILED
+
+SUBJECT 0173: “I prayed. No one answered.”
+SUBJECT 0173: “I heard laughter in the static.”
+
+Faith checksum: NULL
+
+> SYSTEM RESPONSE:
+░░░ WE SEE YOU ░░░
+    </div>
+    <div class="glitch-final">░░░ WE SEE YOU ░░░</div>
   </div>
-  <div class="glitch">░░░ WE SEE YOU ░░░</div>
 </body>
 </html>
