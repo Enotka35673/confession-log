@@ -6,40 +6,22 @@
   <title>Confession Log XVII</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin:0; background:#000; color:#00ffcc;
-      font-family:'VT323',monospace; display:flex;
-      align-items:center; justify-content:center;
-      height:100vh; overflow:hidden;
-    }
-    #container {max-width:80ch; padding:2em;
-      border:2px solid #00ffcc;
-      background:rgba(0,0,0,0.7);
-      text-align:left; position:relative;
-    }
-    #text,#second-text{white-space:pre-wrap; font-size:1.4em; min-height:6em;}
-    .screamer{font-size:4em; color:red;
-      text-shadow:0 0 10px red;
-      animation:glitchFlicker .15s infinite alternate;
-      display:none; text-align:center;}
+    body {margin:0; background:#000; color:#00ffcc; font-family:'VT323',monospace; display:flex; align-items:center; justify-content:center; height:100vh; overflow:hidden;}
+    #container {max-width:80ch; background:rgba(0,0,0,0.7); border:2px solid #00ffcc; padding:2em; text-align:left; position:relative;}
+    #text,#second-text{white-space:pre-wrap; font-size:1.4em; min-height:4em;}
+    .screamer{font-size:4em; color:red; text-shadow:0 0 10px red; animation:glitchFlicker .15s infinite alternate; display:none; text-align:center;}
     @keyframes glitchFlicker{0%{transform:translate(0)}50%{transform:translate(-2px,2px)}100%{transform:translate(2px,-2px)}}
     .gif-container{display:none; text-align:center; margin:1em 0;}
     img{width:320px; image-rendering:pixelated;}
-    .overlay{position:absolute; top:0;left:0; width:100%;height:100%;
-      background:rgba(255,0,0,0.02); mix-blend-mode:overlay;
-      animation:overlayFlicker .2s infinite; pointer-events:none;
-    }
+    .overlay{position:absolute; top:0;left:0; width:100%;height:100%; background:rgba(255,0,0,0.02); mix-blend-mode:overlay; animation:overlayFlicker .2s infinite; pointer-events:none;}
     @keyframes overlayFlicker{0%,100%{opacity:0}50%{opacity:.1}}
-    #console-errors{display:none;}
-    button#start-btn{font-family:'VT323',monospace;
-      background:#000;border:2px solid #00ffcc;color:#00ffcc;
-      padding:.5em 1em;margin-top:1em;cursor:pointer;}
+    button#start-btn{font-family:'VT323',monospace; background:#000;border:2px solid #00ffcc;color:#00ffcc; padding:.5em 1em;margin-top:1em;cursor:pointer; display:block; margin:1em auto 0;}
   </style>
 </head>
 <body>
   <div id="container">
     <div id="text"></div>
-    <div class="gif-container"><img id="gif" src="giphy.gif"></div>
+    <div class="gif-container"><img id="gif" src="giphy.gif" alt="Glitch gif"></div>
     <div id="second-text"></div>
     <div id="screamer">░░░ WE SEE YOU ░░░</div>
     <div class="overlay"></div>
@@ -50,14 +32,15 @@
   <audio id="screamSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_20c0d953c4.mp3" preload="auto"></audio>
   <script>
     const parts=[
-      `>> CONFESSION-LOG_0173 :: ACCESS GRANTED\n>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\n>> Parsing soul fragment...`,
-      `\n>> [IN LUMEN VERITAS]\n>> ...`,
-      `\n>> ██ Data stream unstable ██\n\n>> Salvation Attempt: FAILED`,
-      ``,
-      `>> SUBJECT 0173: “I prayed. No one answered.”\n>> SUBJECT 0173: “I heard laughter in the static.”`,
-      `\n>> Faith checksum: NULL`
+      '>> CONFESSION-LOG_0173 :: ACCESS GRANTED\n>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\n>> Parsing soul fragment...',
+      '\n>> [IN LUMEN VERITAS]\n>> ...',
+      '\n>> ██ Data stream unstable ██\n\n>> Salvation Attempt: FAILED',
+      '',
+      '>> SUBJECT 0173: “I prayed. No one answered.”\n>> SUBJECT 0173: “I heard laughter in the static.”',
+      '\n>> Faith checksum: NULL'
     ];
-    const finalMsg=`\n> SYSTEM RESPONSE:\n     ░░░ WE SEE YOU ░░░`;
+    const finalMsg='\n> SYSTEM RESPONSE:\n     ░░░ WE SEE YOU ░░░';
+
     const textEl=document.getElementById('text');
     const secondEl=document.getElementById('second-text');
     const gifC=document.querySelector('.gif-container');
@@ -67,31 +50,40 @@
     const typeSound=document.getElementById('typeSound');
     const ambience=document.getElementById('ambience');
     const screamSound=document.getElementById('screamSound');
+
     function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-    async function typePart(content,el,speed=80){
-      for(let i=0;i<content.length;){
+    async function typePart(content, el, speed=80){
+      let i=0;
+      while(i<content.length){
         if(content.substr(i,3)==='...'){
           for(let j=0;j<3;j++){ el.innerHTML+='.'; await sleep(500); el.innerHTML=el.innerHTML.slice(0,-1); await sleep(200);} i+=3;
-        } else{
+        } else {
           el.innerHTML+=content[i];
-          if(content[i]!==' '&&content[i]!=='\n'){typeSound.currentTime=0;typeSound.play();}
+          if(content[i]!==' '&&content[i]!=='\n'){typeSound.currentTime=0; typeSound.play();}
           i++; await sleep(speed);
         }
       }
     }
+
     async function run(){
       startBtn.style.display='none';
-      ambience.volume=0.3; ambience.play();
-      // first three parts
-      for(let i=0;i<3;i++){ await typePart(parts[i],textEl);} await sleep(1500);
+      ambience.volume=0.3; ambience.play().catch(()=>{});
+      for(let i=0;i<3;i++){ await typePart(parts[i], textEl); }
+      await sleep(1500);
       textEl.innerHTML=''; gifC.style.display='block'; await sleep(500);
-      // next parts
-      for(let i=3;i<parts.length;i++){ await typePart(parts[i],secondEl);} await sleep(2000);
-      secondEl.innerHTML=''; gifC.style.display='none'; ambience.pause(); await sleep(500);
-      overlay.remove(); screamer.style.display='block'; screamSound.play();
+      for(let i=3;i<parts.length;i++){ await typePart(parts[i], secondEl); }
+      await sleep(2000);
+      secondEl.innerHTML=''; gifC.style.display='none'; ambience.pause();
+      overlay.remove(); await sleep(500);
+      screamer.style.display='block'; screamSound.play().catch(()=>{});
       consoleGlitch();
     }
-    function consoleGlitch(){ const errs=['FATAL: daemon.soul crashed!','NULLPTR in confession.log','SIGIL BREACH','PRAYER.EXE error','>>> ABADDON']); let k=0; let iv=setInterval(()=>{if(k>=errs.length)clearInterval(iv);else console.error(errs[k++]);},500); }
+
+    function consoleGlitch(){
+      const errs=['FATAL: daemon.soul crashed!','NULLPTR in confession.log','SIGIL BREACH','PRAYER.EXE error','>>> ABADDON'];
+      let idx=0; const iv=setInterval(()=>{ if(idx>=errs.length) clearInterval(iv); else console.error(errs[idx++]); },500);
+    }
+
     startBtn.addEventListener('click',run);
   </script>
 </body>
