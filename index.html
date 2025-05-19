@@ -17,7 +17,7 @@
       justify-content: flex-start;
       min-height: 100vh;
       padding: 2em;
-      overflow-x: hidden;
+      overflow-y: scroll;
     }
 
     img {
@@ -27,97 +27,92 @@
       image-rendering: pixelated;
     }
 
-    .glitch {
-      font-size: 2.2em;
-      position: relative;
-      color: #00ffee;
-      animation: flicker 2.5s infinite;
+    .typewriter {
+      border-right: 2px solid #00ffee;
+      white-space: pre-wrap;
+      overflow: hidden;
+      font-size: 1.5em;
+      text-align: left;
+      max-width: 800px;
     }
 
     .highlight {
       color: #ff55ff;
-      text-shadow: 0 0 5px #ff55ff, 0 0 10px #00ffee, 0 0 15px #55ccff;
+      animation: glitch-color 1s infinite alternate;
     }
 
-    .glitch-strong {
-      font-size: 3em;
+    .threat {
+      font-size: 2.5em;
       color: #ff55ff;
-      animation: intenseGlitch 0.15s infinite;
-      text-shadow: 0 0 2px white, 0 0 5px #ff55ff, 0 0 15px #55ccff;
+      text-shadow: 0 0 10px #ff55ff, 0 0 20px #00ffee, 0 0 30px #ff55ff;
+      animation: glitch-threat 0.3s infinite;
       margin-top: 2em;
     }
 
-    @keyframes flicker {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.8;
-        transform: translate(1px, -1px);
-      }
+    @keyframes glitch-color {
+      0% { color: #ff55ff; }
+      33% { color: #ffffff; }
+      66% { color: #00ffee; }
+      100% { color: #ff55ff; }
     }
 
-    @keyframes intenseGlitch {
-      0% {
-        transform: translate(0);
-      }
-      20% {
-        transform: translate(-1px, 1px);
-      }
-      40% {
-        transform: translate(1px, -1px);
-      }
-      60% {
-        transform: translate(-2px, 2px);
-      }
-      80% {
-        transform: translate(2px, -2px);
-      }
-      100% {
-        transform: translate(0);
-      }
-    }
-
-    .typewriter {
-      max-width: 80ch;
-      white-space: pre-wrap;
-      overflow: hidden;
-      border-right: .15em solid #00ffee;
-      animation: typing 8s steps(80, end) 1s 1 normal both;
-      font-size: 1.25em;
-    }
-
-    @keyframes typing {
-      from {
-        width: 0;
-      }
-      to {
-        width: 100%;
-      }
+    @keyframes glitch-threat {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-1px, 1px); }
+      80% { transform: translate(1px, -1px); }
+      100% { transform: translate(0); }
     }
   </style>
 </head>
 <body>
   <img src="giphy.gif" alt="Glitch gif">
-  <div class="glitch">CONFESSION-LOG_0173 :: <span class="highlight">ACCESS GRANTED</span><br>
-  SYSTEM MESSAGE: <span class="highlight">ERROR_173: CONFESSION CORRUPTED</span></div>
-  <pre class="typewriter">
-Parsing soul fragment...
+  <div id="log" class="typewriter"></div>
+  <div id="threat" class="threat" style="display: none;">░░░ WE SEE YOU ░░░</div>
 
-[IN LUMEN VERITAS]
-. . .
+  <script>
+    const text = `CONFESSION-LOG_0173 :: ACCESS GRANTED  
+SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED  
 
-██ Data stream unstable ██
+Parsing soul fragment...  
 
-Salvation Attempt: FAILED
+[IN LUMEN VERITAS]  
+. . .  
 
-SUBJECT 0173: “I prayed. No one answered.”
-SUBJECT 0173: “I heard laughter in the static.”
+██ Data stream unstable ██  
 
-Faith checksum: NULL
+Salvation Attempt: FAILED  
 
-> SYSTEM RESPONSE:
-</pre>
-  <div class="glitch-strong">░░░ WE SEE YOU ░░░</div>
+SUBJECT 0173: “I prayed. No one answered.”  
+SUBJECT 0173: “I heard laughter in the static.”  
+
+Faith checksum: NULL  
+
+> SYSTEM RESPONSE:  
+     ░░░ WE SEE YOU ░░░`;
+
+    const output = document.getElementById('log');
+    const threat = document.getElementById('threat');
+    let index = 0;
+
+    function typeChar() {
+      if (index < text.length) {
+        output.textContent += text.charAt(index);
+        index++;
+        let delay = 40;
+
+        // Dramatic pauses after periods, colons, or newlines
+        if (text.charAt(index - 1) === '.' || text.charAt(index - 1) === ':' || text.charAt(index - 1) === '\n') {
+          delay = 300;
+        }
+        setTimeout(typeChar, delay);
+      } else {
+        threat.style.display = 'block';
+      }
+    }
+
+    window.onload = () => setTimeout(typeChar, 500);
+  </script>
 </body>
 </html>
