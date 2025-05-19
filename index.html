@@ -30,17 +30,46 @@
     .glitch {
       font-size: 2em;
       position: relative;
-      animation: glitch 2s infinite;
       color: #ff00ff;
     }
 
-    @keyframes glitch {
-      0% { text-shadow: 2px 0 #ff00ff, -2px 0 cyan; }
-      20% { text-shadow: -2px 0 cyan, 2px 0 white; }
-      40% { text-shadow: 2px 2px white, -2px -2px #00ffff; }
-      60% { text-shadow: -2px -2px #00ffff, 2px 2px #ffffff; }
-      80% { text-shadow: 0 0 white, 0 0 #00ffff; }
-      100% { text-shadow: 2px 0 #ff00ff, -2px 0 cyan; }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      opacity: 0.7;
+    }
+
+    .glitch::before {
+      color: cyan;
+      transform: translate(1px, -1px);
+      animation: glitchMove1 1s infinite linear;
+    }
+
+    .glitch::after {
+      color: white;
+      transform: translate(-1px, 1px);
+      animation: glitchMove2 1.2s infinite linear;
+    }
+
+    @keyframes glitchMove1 {
+      0% { transform: translate(0.5px, -0.5px); }
+      20% { transform: translate(-1px, 0.5px); }
+      40% { transform: translate(1px, -1.5px); }
+      60% { transform: translate(-0.5px, 1px); }
+      80% { transform: translate(1px, 1px); }
+      100% { transform: translate(0px, 0px); }
+    }
+
+    @keyframes glitchMove2 {
+      0% { transform: translate(-0.5px, 0.5px); }
+      25% { transform: translate(1px, -1px); }
+      50% { transform: translate(-1.5px, 1px); }
+      75% { transform: translate(1px, 1px); }
+      100% { transform: translate(0px, 0px); }
     }
 
     .content {
@@ -52,26 +81,23 @@
 
     .white { color: white; }
     .cyan { color: #00ffff; }
-    .fuchsia-glitch {
-      color: #ff00ff;
-      animation: glitch 1.5s infinite;
-    }
+    .fuchsia { color: #ff00ff; }
   </style>
 </head>
 <body>
   <img src="giphy.gif" alt="Glitch gif">
-  <div class="glitch">CONFESSION-LOG_0173 :: ACCESS GRANTED</div>
+  <div class="glitch" data-text="CONFESSION-LOG_0173 :: ACCESS GRANTED">CONFESSION-LOG_0173 :: ACCESS GRANTED</div>
   <div class="content">
-    <p class="white">SYSTEM MESSAGE: <span class="fuchsia-glitch">ERROR_173: CONFESSION CORRUPTED</span></p>
-    <p class="cyan">Parsing soul fragment...</p>
-    <p class="white">[IN LUMEN VERITAS]</p>
+    <p class="white">SYSTEM MESSAGE: <span class="fuchsia">ERROR_173: CONFESSION CORRUPTED</span></p>
+    <p>Parsing soul fragment...</p>
+    <p class="cyan">[IN LUMEN VERITAS]</p>
     <p>. . .</p>
-    <p class="fuchsia-glitch">██ Data stream unstable ██</p>
-    <p class="white">Salvation Attempt: <span class="cyan">FAILED</span></p>
-    <p>SUBJECT 0173: “I prayed. <span class="white">No one answered.</span>”</p>
-    <p>SUBJECT 0173: “I heard <span class="cyan">laughter</span> in the static.”</p>
-    <p class="white">Faith checksum: <span class="fuchsia-glitch">NULL</span></p>
-    <p>> SYSTEM RESPONSE:<br>     ░░░ <span class="fuchsia-glitch">WE SEE YOU</span> ░░░</p>
+    <p class="fuchsia">██ Data stream unstable ██</p>
+    <p>Salvation Attempt: <span class="white">FAILED</span></p>
+    <p class="white">SUBJECT 0173: “I prayed. No one answered.”</p>
+    <p class="white">SUBJECT 0173: “I heard laughter in the static.”</p>
+    <p class="fuchsia">Faith checksum: NULL</p>
+    <p>> SYSTEM RESPONSE:<br>     ░░░ <span class="fuchsia">WE SEE YOU</span> ░░░</p>
   </div>
 </body>
 </html>
