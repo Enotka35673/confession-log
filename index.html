@@ -7,140 +7,142 @@
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
     * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
-
     body {
-      margin: 0;
       background-color: black;
-      color: #00ffff;
+      color: #00ffee;
       font-family: 'VT323', monospace;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
     }
-
     #container {
-      width: 90%;
-      max-width: 900px;
-      padding: 2rem;
-      border: 2px solid #00ffff;
-      background-color: rgba(0, 0, 0, 0.8);
-      position: relative;
-      z-index: 1;
-      text-align: center;
+      max-width: 80ch;
+      white-space: pre-wrap;
+      text-align: left;
+      padding: 2em;
+      border: 2px solid #00ffee;
+      box-shadow: 0 0 20px #00ffee33;
+      background: rgba(0, 0, 0, 0.7);
     }
-
     .quote {
       color: fuchsia;
     }
-
-    #glitchText {
-      white-space: pre-wrap;
-      font-size: 1.6rem;
-      min-height: 200px;
-    }
-
-    #screamer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 9999;
-      animation: flicker 0.3s infinite;
-    }
-
-    #screamer h1 {
-      font-size: 8rem;
+    .screamer {
+      font-size: 4em;
       color: red;
-      text-shadow: 0 0 15px red, 0 0 30px white;
-      animation: glitchScreamer 0.3s infinite;
+      text-shadow: 0 0 20px red;
+      animation: glitchFlicker 0.15s infinite;
     }
-
-    @keyframes glitchScreamer {
+    @keyframes glitchFlicker {
       0% { transform: translate(0); }
-      20% { transform: translate(-5px, 2px); }
-      40% { transform: translate(5px, -3px); }
-      60% { transform: translate(-3px, 5px); }
-      80% { transform: translate(3px, -2px); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-1px, 1px); }
+      80% { transform: translate(1px, -1px); }
       100% { transform: translate(0); }
     }
-
-    @keyframes flicker {
-      0%, 100% { background-color: black; }
-      50% { background-color: #111; }
+    #gif-container {
+      display: none;
+      justify-content: center;
+      margin: 2em 0;
     }
-
-    img {
-      max-width: 300px;
+    #gif-container img {
+      width: 320px;
       height: auto;
-      margin-bottom: 2rem;
       image-rendering: pixelated;
     }
   </style>
 </head>
 <body>
-  <div id="screamer">
-    <h1>░░░ WE SEE YOU ░░░</h1>
-    <audio id="screamSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_31b9b4bbf4.mp3?filename=scream-6061.mp3"></audio>
+  <div id="container"></div>
+  <div id="gif-container">
+    <img src="giphy.gif" alt="Glitch gif">
   </div>
-
-  <div id="container">
-    <img id="gif" src="giphy.gif" alt="Glitch gif">
-    <div id="glitchText"></div>
-    <audio id="typeSound" src="https://cdn.pixabay.com/download/audio/2022/03/03/audio_19f9e09f20.mp3?filename=keyboard-typing-14446.mp3"></audio>
-  </div>
-
+  <audio id="typeSound" src="https://cdn.pixabay.com/audio/2022/03/31/audio_63b0624e2f.mp3" preload="auto"></audio>
+  <audio id="screamSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_20c0d953c4.mp3" preload="auto"></audio>
   <script>
-    const glitchText = document.getElementById("glitchText");
-    const screamer = document.getElementById("screamer");
-    const gif = document.getElementById("gif");
-    const typeSound = document.getElementById("typeSound");
-    const screamSound = document.getElementById("screamSound");
+    const container = document.getElementById('container');
+    const gifContainer = document.getElementById('gif-container');
+    const typeSound = document.getElementById('typeSound');
+    const screamSound = document.getElementById('screamSound');
 
-    const part1 = `CONFESSION-LOG_0173 :: ACCESS GRANTED\nSYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\nParsing soul fragment...\n\n[IN LUMEN VERITAS]\n. . .\n\n██ Data stream unstable ██\n\nSalvation Attempt: FAILED\n\n<span class="quote">SUBJECT 0173: “I prayed. No one answered.”</span>\n<span class="quote">SUBJECT 0173: “I heard laughter in the static.”</span>\n\nFaith checksum: NULL\n\n> SYSTEM RESPONSE:`;
+    const texts = [
+`CONFESSION-LOG_0173 :: ACCESS GRANTED
+SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED
 
-    const scaryEnding = `░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n░░░░░░░░░░░░░░░░░░░░░ WE SEE YOU ░░░░░░░░░░░░░░░░░\n░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░`;
+Parsing soul fragment...
 
-    async function typeOut(text, delay = 75) {
-      glitchText.innerHTML = "";
-      for (let char of text) {
-        if (char === '\\n') {
-          glitchText.innerHTML += "<br>";
-        } else {
-          glitchText.innerHTML += char;
+[IN LUMEN VERITAS]
+. . .
+
+██ Data stream unstable ██
+
+Salvation Attempt: FAILED`,
+
+`SUBJECT 0173: <span class="quote">“I prayed. No one answered.”</span>
+SUBJECT 0173: <span class="quote">“I heard laughter in the static.”</span>
+
+Faith checksum: NULL`,
+
+`> SYSTEM RESPONSE:
+░░░ <span class="screamer">WE SEE YOU</span> ░░░`
+    ];
+
+    let currentText = 0;
+    let charIndex = 0;
+    let displayText = '';
+
+    function typeText() {
+      if (charIndex < texts[currentText].length) {
+        displayText += texts[currentText][charIndex];
+        container.innerHTML = displayText;
+        charIndex++;
+
+        if (texts[currentText][charIndex - 1] !== ' ' && texts[currentText][charIndex - 1] !== '\n') {
           typeSound.currentTime = 0;
           typeSound.play();
         }
-        await new Promise(res => setTimeout(res, delay));
+
+        setTimeout(typeText, 40);
+      } else {
+        if (currentText === 0) {
+          setTimeout(() => {
+            container.innerHTML = '';
+            gifContainer.style.display = 'flex';
+            currentText++;
+            charIndex = 0;
+            displayText = '';
+            setTimeout(typeText, 1200);
+          }, 1600);
+        } else if (currentText === 1) {
+          setTimeout(() => {
+            container.innerHTML = '';
+            gifContainer.style.display = 'none';
+            document.body.style.backgroundColor = '#000';
+            currentText++;
+            charIndex = 0;
+            displayText = '';
+            setTimeout(typeText, 1200);
+          }, 3000);
+        } else if (currentText === 2) {
+          setTimeout(() => {
+            screamSound.play();
+            container.innerHTML = texts[2];
+            document.body.style.backgroundColor = 'black';
+          }, 1500);
+        }
       }
     }
 
-    async function startSequence() {
-      await typeOut(part1);
-      await new Promise(res => setTimeout(res, 2500));
-      glitchText.innerHTML = "";
-
-      await typeOut(scaryEnding, 50);
-      await new Promise(res => setTimeout(res, 2000));
-
-      gif.style.display = "none";
-      document.getElementById("container").style.display = "none";
-      screamer.style.display = "flex";
-      screamSound.play();
-    }
-
     window.onload = () => {
-      startSequence();
-    }
+      setTimeout(typeText, 1000);
+    };
   </script>
 </body>
 </html>
