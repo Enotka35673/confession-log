@@ -1,173 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Confession Log XVII</title>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
     body {
-      margin: 0;
       background-color: black;
       color: #00ffcc;
       font-family: 'VT323', monospace;
       text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      overflow: hidden;
-    }
-
-    #container {
-      max-width: 800px;
       padding: 2em;
-      border: 1px solid #00ffcc;
-      box-shadow: 0 0 10px #00ffcc33;
     }
-
-    #output {
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-size: 1.4em;
-    }
-
     .quote {
       color: fuchsia;
     }
-
-    .glitch {
-      color: #ff00ff;
-      font-size: 2em;
-      text-shadow: 0 0 5px #ff00ff, 0 0 10px #00ffff, 0 0 20px #0000ff;
-      animation: glitch 0.3s infinite;
+    #output {
+      white-space: pre-wrap;
+      font-size: 1.5em;
+      margin-top: 1em;
     }
-
-    @keyframes glitch {
-      0% {
-        transform: translate(0);
-      }
-      20% {
-        transform: translate(-2px, 2px);
-      }
-      40% {
-        transform: translate(2px, -2px);
-      }
-      60% {
-        transform: translate(-1px, 1px);
-      }
-      80% {
-        transform: translate(1px, -1px);
-      }
-      100% {
-        transform: translate(0);
-      }
+    #startBtn {
+      margin-top: 2em;
+      padding: 0.5em 1em;
+      font-size: 1em;
+      cursor: pointer;
     }
-
     #screamer {
+      display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: black;
+      background-color: black;
       color: red;
-      display: flex;
+      font-size: 3em;
       align-items: center;
       justify-content: center;
-      font-size: 4em;
-      text-shadow: 0 0 10px red, 0 0 20px white;
-      animation: glitch 0.2s infinite;
       z-index: 1000;
-      display: none;
-    }
-
-    #startBtn {
-      color: #00ffcc;
-      background: none;
-      border: 1px solid #00ffcc;
-      padding: 0.5em 1em;
-      font-size: 1.2em;
-      cursor: pointer;
-      font-family: 'VT323', monospace;
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <img id="glitchGif" src="giphy.gif" alt="Glitch gif" style="width: 320px; height: auto; image-rendering: pixelated; display: none;">
-    <div id="output"></div>
-    <button id="startBtn">Click to start</button>
-  </div>
+  <div id="output"></div>
+  <button id="startBtn">Начать</button>
   <div id="screamer">░░░ WE SEE YOU ░░░</div>
 
-  <audio id="typeSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_43a42d3406.mp3?filename=keyboard-typing-199731.mp3"></audio>
-  <audio id="ambientSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_38699640e7.mp3?filename=dark-ambient-110174.mp3" loop></audio>
-  <audio id="screamSound" src="https://cdn.pixabay.com/download/audio/2022/03/01/audio_0a1e54d6a1.mp3?filename=screaming-178844.mp3"></audio>
+  <audio id="typeSound" src="type.mp3"></audio>
+  <audio id="ambientSound" src="ambient.mp3" loop></audio>
+  <audio id="screamSound" src="scream.mp3"></audio>
 
   <script>
     const output = document.getElementById('output');
     const typeSound = document.getElementById('typeSound');
     const ambientSound = document.getElementById('ambientSound');
     const screamSound = document.getElementById('screamSound');
-    const gif = document.getElementById('glitchGif');
     const screamer = document.getElementById('screamer');
     const startBtn = document.getElementById('startBtn');
 
     const textParts = [
-      `>> CONFESSION-LOG_0173 :: ACCESS GRANTED\n>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\n>> Parsing soul fragment...\n\n>> [IN LUMEN VERITAS]\n. . .\n\n██ Data stream unstable ██\n\nSalvation Attempt: FAILED\n`,
-      `>> SUBJECT 0173: “<span class='quote'>I prayed. No one answered.</span>”\n>> SUBJECT 0173: “<span class='quote'>I heard laughter in the static.</span>”\n\n>> Faith checksum: NULL\n`,
-      `>> > SYSTEM RESPONSE:\n░░░ WE SEE YOU ░░░`
+      `>> CONFESSION-LOG_0173 :: ACCESS GRANTED
+>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED
+
+>> Parsing soul fragment...
+
+>> [IN LUMEN VERITAS]
+...`,
+
+      `>> SUBJECT 0173: “<span class='quote'>I prayed. No one answered.</span>”
+>> SUBJECT 0173: “<span class='quote'>I heard laughter in the static.</span>”
+
+>> Faith checksum: NULL`,
+
+      `>> > SYSTEM RESPONSE:
+░░░ WE SEE YOU ░░░`
     ];
 
     let part = 0;
-    let charIndex = 0;
 
     async function typeText() {
       if (part >= textParts.length) return;
-      let current = textParts[part];
-      charIndex = 0;
+      const current = textParts[part];
       output.innerHTML = '';
-
-      while (charIndex < current.length) {
-        let char = current[charIndex];
+      for (let i = 0; i < current.length; i++) {
+        const char = current[i];
         output.innerHTML += char;
-
-        if (char !== ' ' && char !== '\n') typeSound.play().catch(() => {});
-
-        if (char === '.' && current.slice(charIndex, charIndex + 3) === '...') {
-          await new Promise(r => setTimeout(r, 400));
-          output.innerHTML = output.innerHTML.slice(0, -3);
-          await new Promise(r => setTimeout(r, 300));
-          output.innerHTML += '...';
-          await new Promise(r => setTimeout(r, 300));
-          output.innerHTML = output.innerHTML.slice(0, -3);
-          await new Promise(r => setTimeout(r, 300));
-          output.innerHTML += '...';
-          charIndex += 3;
+        if (char !== ' ' && char !== '\\n') typeSound.play();
+        if (char === '.' && current.slice(i, i + 3) === '...') {
+          for (let j = 0; j < 2; j++) {
+            await new Promise(r => setTimeout(r, 400));
+            output.innerHTML = output.innerHTML.slice(0, -3);
+            await new Promise(r => setTimeout(r, 300));
+            output.innerHTML += '...';
+          }
+          i += 2;
         } else {
           await new Promise(r => setTimeout(r, 45));
-          charIndex++;
         }
       }
-
-      if (part === 0) {
+      part++;
+      if (part < textParts.length) {
         await new Promise(r => setTimeout(r, 1200));
-        output.innerHTML = '';
-        gif.style.display = 'block';
-        part++;
-        await typeText();
-      } else if (part === 1) {
-        await new Promise(r => setTimeout(r, 1600));
-        output.innerHTML = '';
-        gif.style.display = 'none';
-        part++;
-        await typeText();
-      } else if (part === 2) {
-        await new Promise(r => setTimeout(r, 2000));
+        typeText();
+      } else {
         ambientSound.pause();
-        output.innerHTML = '';
         screamer.style.display = 'flex';
         screamSound.play();
       }
@@ -176,7 +113,7 @@
     startBtn.addEventListener('click', () => {
       startBtn.style.display = 'none';
       ambientSound.volume = 0.3;
-      ambientSound.play().catch(() => {});
+      ambientSound.play();
       typeText();
     });
   </script>
