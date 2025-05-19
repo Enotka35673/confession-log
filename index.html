@@ -32,10 +32,14 @@
       margin-top: 2em;
     }
 
+    .entry {
+      font-size: 1.5em;
+      margin: 0.5em 0;
+    }
+
     .glitch-text {
       position: relative;
-      color: white;
-      font-size: 1.5em;
+      color: #00ffff;
     }
 
     .glitch-text::before,
@@ -44,59 +48,50 @@
       position: absolute;
       left: 0;
       width: 100%;
-      opacity: 0.7;
+      opacity: 0.5;
     }
 
     .glitch-text::before {
       color: #ff00ff;
-      animation: glitchTop 0.6s infinite linear alternate-reverse;
+      animation: glitchTop 0.4s infinite linear alternate-reverse;
     }
 
     .glitch-text::after {
       color: #00ffff;
-      animation: glitchBottom 0.6s infinite linear alternate-reverse;
+      animation: glitchBottom 0.4s infinite linear alternate-reverse;
     }
 
     @keyframes glitchTop {
-      0% {
-        transform: translate(0px, 0px);
-      }
-      20% {
-        transform: translate(-2px, -2px);
-      }
-      40% {
-        transform: translate(-1px, 2px);
-      }
-      60% {
-        transform: translate(3px, 1px);
-      }
-      80% {
-        transform: translate(-1px, -1px);
-      }
-      100% {
-        transform: translate(0px, 0px);
-      }
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-2px, -2px); }
+      50% { transform: translate(2px, 0); }
+      75% { transform: translate(0, 2px); }
+      100% { transform: translate(0, 0); }
     }
 
     @keyframes glitchBottom {
-      0% {
-        transform: translate(0px, 0px);
-      }
-      20% {
-        transform: translate(2px, 1px);
-      }
-      40% {
-        transform: translate(1px, -1px);
-      }
-      60% {
-        transform: translate(-3px, 0px);
-      }
-      80% {
-        transform: translate(2px, 2px);
-      }
-      100% {
-        transform: translate(0px, 0px);
-      }
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(2px, 2px); }
+      50% { transform: translate(-2px, 0); }
+      75% { transform: translate(0, -2px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .highlight {
+      color: #ffffff;
+    }
+
+    .error {
+      color: #ff00ff;
+    }
+
+    .corruption {
+      color: #ff5555;
+    }
+
+    .static {
+      color: #8888ff;
+      font-style: italic;
     }
 
     .we-see-you {
@@ -104,6 +99,7 @@
       margin-top: 2em;
       color: white;
       position: relative;
+      animation: pulse 1.5s infinite;
     }
 
     .we-see-you::before,
@@ -117,32 +113,37 @@
 
     .we-see-you::before {
       color: #ff00ff;
-      animation: glitchTop 0.3s infinite linear alternate-reverse;
+      animation: glitchTop 0.2s infinite linear alternate-reverse;
     }
 
     .we-see-you::after {
       color: #00ffff;
-      animation: glitchBottom 0.3s infinite linear alternate-reverse;
+      animation: glitchBottom 0.2s infinite linear alternate-reverse;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
   </style>
 </head>
 <body>
   <img src="giphy.gif" alt="Glitch gif">
   <div class="content">
-    <p class="glitch-text" data-text="CONFESSION-LOG_0173 :: ACCESS GRANTED">CONFESSION-LOG_0173 :: ACCESS GRANTED</p>
-    <p class="glitch-text" data-text="SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED">SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED</p>
-    <p class="glitch-text" data-text="Parsing soul fragment...">Parsing soul fragment...</p>
+    <p class="entry highlight">CONFESSION-LOG_0173 :: ACCESS GRANTED</p>
+    <p class="entry error">SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED</p>
+    <p class="entry">Parsing soul fragment...</p>
     <br>
-    <p class="glitch-text" data-text="[IN LUMEN VERITAS]">[IN LUMEN VERITAS]</p>
-    <p class="glitch-text" data-text=". . .">. . .</p>
+    <p class="entry highlight">[IN LUMEN VERITAS]</p>
+    <p class="entry">. . .</p>
     <br>
-    <p class="glitch-text" data-text="██ Data stream unstable ██">██ Data stream unstable ██</p>
-    <p class="glitch-text" data-text="Salvation Attempt: FAILED">Salvation Attempt: FAILED</p>
+    <p class="entry corruption">██ Data stream unstable ██</p>
+    <p class="entry error">Salvation Attempt: FAILED</p>
     <br>
-    <p class="glitch-text" data-text="SUBJECT 0173: “I prayed. No one answered.”">SUBJECT 0173: “I prayed. No one answered.”</p>
-    <p class="glitch-text" data-text="SUBJECT 0173: “I heard laughter in the static.”">SUBJECT 0173: “I heard laughter in the static.”</p>
+    <p class="entry static">SUBJECT 0173: “I prayed. No one answered.”</p>
+    <p class="entry static">SUBJECT 0173: “I heard laughter in the static.”</p>
     <br>
-    <p class="glitch-text" data-text="Faith checksum: NULL">Faith checksum: NULL</p>
+    <p class="entry error">Faith checksum: NULL</p>
     <div class="we-see-you" data-text="░░░ WE SEE YOU ░░░">░░░ WE SEE YOU ░░░</div>
   </div>
 </body>
