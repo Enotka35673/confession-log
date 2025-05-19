@@ -8,206 +8,167 @@
   <style>
     body {
       margin: 0;
-      background-color: black;
+      background: black;
       color: #00ffcc;
       font-family: 'VT323', monospace;
-      text-align: center;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      padding: 2em;
+      height: 100vh;
       overflow: hidden;
     }
-
-    .terminal {
-      background: rgba(0, 0, 0, 0.6);
+    #container {
+      max-width: 80ch;
+      background: rgba(0,0,0,0.7);
       border: 2px solid #00ffcc;
-      padding: 1.5em;
-      width: 90%;
-      max-width: 800px;
-      box-shadow: 0 0 20px #00ffcc33;
+      padding: 2em;
       position: relative;
+      text-align: left;
     }
-
-    .gif-container {
-      margin: 1em 0;
+    #text, #second-text {
+      white-space: pre-wrap;
+      font-size: 1.4em;
+      min-height: 6em;
     }
-
-    img {
-      width: 320px;
-      height: auto;
-      image-rendering: pixelated;
-    }
-
     .quote {
       color: fuchsia;
     }
-
     .screamer {
       font-size: 3em;
       color: red;
-      text-shadow: 0 0 10px red, 0 0 30px #ff0040;
-      animation: glitchyFlash 0.1s infinite alternate;
+      text-shadow: 0 0 10px red;
+      animation: glitchFlicker 0.15s infinite alternate;
       display: none;
-      white-space: pre-wrap;
+      text-align: center;
     }
-
-    @keyframes glitchyFlash {
-      0% { transform: translate(0, 0) skew(0deg); }
-      20% { transform: translate(-3px, 1px) skew(0.5deg); }
-      40% { transform: translate(3px, -2px) skew(-0.5deg); }
-      60% { transform: translate(-1px, 3px) skew(0.5deg); }
-      80% { transform: translate(1px, -1px) skew(-0.5deg); }
-      100% { transform: translate(0, 0) skew(0deg); }
+    @keyframes glitchFlicker {
+      0% { transform: translate(0); }
+      50% { transform: translate(-2px,2px); }
+      100% { transform: translate(2px,-2px); }
     }
-
-    #console-errors {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      font-size: 0.8em;
-      color: #ff0040;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 0.5em;
-      font-family: monospace;
-      border-top: 1px solid red;
+    .gif-container {
+      text-align: center;
+      margin: 1em 0;
+      display: none;
     }
+    img { width: 320px; image-rendering: pixelated; }
+    /* Random glitch overlay */
+    .overlay {
+      position: absolute; top:0; left:0;
+      width:100%; height:100%; pointer-events:none;
+      background: rgba(255,0,0,0.02);
+      mix-blend-mode: overlay;
+      animation: overlayFlicker 0.2s infinite;
+    }
+    @keyframes overlayFlicker {
+      0%,100%{opacity:0;} 50%{opacity:0.1;}
+    }
+    #console-errors { display:none; }
   </style>
 </head>
 <body>
-  <div class="terminal">
-    <pre id="text"></pre>
-    <div class="gif-container" style="display:none;">
-      <img src="giphy.gif" alt="Glitch gif">
-    </div>
-    <pre id="second-text" style="display:none;"></pre>
-    <div class="screamer" id="screamer">░░░ WE SEE YOU ░░░</div>
+  <div id="container">
+    <div id="text"></div>
+    <div class="gif-container"><img id="gif" src="creepy.gif" alt="Creepy Gif"></div>
+    <div id="second-text"></div>
+    <div id="screamer" class="screamer">░░░ WE SEE YOU ░░░</div>
+    <div class="overlay"></div>
   </div>
-  <div id="console-errors"></div>
-  <audio id="typeSound" src="typewriter.mp3" preload="auto"></audio>
-  <audio id="ambience" src="ambience.mp3" preload="auto" loop></audio>
-  <audio id="screamSound" src="scream.mp3" preload="auto"></audio>
+
+  <audio id="typeSound" src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Typewriter_key.ogg" preload="auto"></audio>
+  <audio id="ambience" src="https://cdn.pixabay.com/download/audio/2023/03/13/audio_78016e640e.mp3?filename=data-murmur-140612.mp3" preload="auto" loop></audio>
+  <audio id="screamSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_20c0d953c4.mp3" preload="auto"></audio>
+
   <script>
-    const text = `>> CONFESSION-LOG_0173 :: ACCESS GRANTED\n>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\n>> Parsing soul fragment...\n\n>> [IN LUMEN VERITAS]\n>> . . .\n\n>> ██ Data stream unstable ██\n\n>> Salvation Attempt: FAILED`;
+    const parts = [
+      `>> CONFESSION-LOG_0173 :: ACCESS GRANTED\n>> SYSTEM MESSAGE: ERROR_173: CONFESSION CORRUPTED\n\n>> Parsing soul fragment...`,
+      `\n>> [IN LUMEN VERITAS]\n>> ...`,
+      `\n>> ██ Data stream unstable ██\n\n>> Salvation Attempt: FAILED`,
+      ``,
+      `>> <span class="quote">SUBJECT 0173: “I prayed. No one answered.”</span>\n>> <span class="quote">SUBJECT 0173: “I heard laughter in the static.”</span>`,
+      `\n>> Faith checksum: NULL`
+    ];
+    const finalMsg = `\n> SYSTEM RESPONSE:\n     ░░░ WE SEE YOU ░░░`;
 
-    const secondText = `>> <span class="quote">SUBJECT 0173: “I prayed. No one answered.”</span>\n>> <span class="quote">SUBJECT 0173: “I heard laughter in the static.”</span>\n\n>> Faith checksum: NULL`;
-
-    const screamerText = `> SYSTEM RESPONSE:\n░░░ WE SEE YOU ░░░`;
-
-    const element = document.getElementById('text');
-    const secondElement = document.getElementById('second-text');
+    const textEl = document.getElementById('text');
+    const secondEl = document.getElementById('second-text');
+    const gifContainer = document.querySelector('.gif-container');
     const screamer = document.getElementById('screamer');
-    const gif = document.querySelector('.gif-container');
-    const consoleErrors = document.getElementById('console-errors');
+    const overlay = document.querySelector('.overlay');
 
     const typeSound = document.getElementById('typeSound');
     const ambience = document.getElementById('ambience');
     const screamSound = document.getElementById('screamSound');
 
-    let allowAudio = false;
+    let clickStarted = false;
     document.body.addEventListener('click', () => {
-      if (!allowAudio) {
-        allowAudio = true;
+      if (!clickStarted) {
+        clickStarted = true;
         ambience.volume = 0.3;
         ambience.play();
-        startTyping(text, element, () => {
-          setTimeout(() => {
-            element.textContent = '';
-            gif.style.display = 'block';
-            typeWithEffect(secondText, secondElement, () => {
-              setTimeout(() => {
-                gif.style.display = 'none';
-                secondElement.textContent = '';
-                ambience.pause();
-                screamer.style.display = 'block';
-                screamSound.play();
-                glitchOut();
-              }, 4000);
-            });
-            secondElement.style.display = 'block';
-          }, 2000);
-        });
+        runSequence();
       }
     });
 
-    function typeWithEffect(str, el, cb) {
+    async function typePart(text, element, speed=100) {
       let i = 0;
-      function typeChar() {
-        if (i < str.length) {
-          el.innerHTML += str[i];
-          typeSound.currentTime = 0;
-          typeSound.play();
-          i++;
-          let delay = 80;
-          if (str.slice(i-3, i) === '...') {
-            el.innerHTML = el.innerHTML.slice(0, -3);
-            blinkDots(el, 0, () => {
-              i += 0;
-              typeChar();
-            });
-          } else {
-            setTimeout(typeChar, delay);
+      while (i < text.length) {
+        if (text.substring(i, i+3) === '...') {
+          for (let j=0; j<3; j++) {
+            element.innerHTML += '.';
+            await sleep(400);
+            element.innerHTML = element.innerHTML.slice(0,-1);
+            await sleep(200);
           }
-        } else if (cb) cb();
-      }
-      typeChar();
-    }
-
-    function blinkDots(el, count, done) {
-      if (count < 2) {
-        el.innerHTML += '.';
-        setTimeout(() => {
-          el.innerHTML = el.innerHTML.slice(0, -1);
-          setTimeout(() => blinkDots(el, count + 1, done), 200);
-        }, 400);
-      } else {
-        done();
-      }
-    }
-
-    function startTyping(str, el, cb) {
-      let i = 0;
-      function typeChar() {
-        if (i < str.length) {
-          el.textContent += str[i];
-          typeSound.currentTime = 0;
-          typeSound.play();
-          i++;
-          let delay = 90;
-          if (str.slice(i-3, i) === '...') {
-            el.textContent = el.textContent.slice(0, -3);
-            blinkDots(el, 0, () => {
-              i += 0;
-              typeChar();
-            });
-          } else {
-            setTimeout(typeChar, delay);
-          }
-        } else if (cb) cb();
-      }
-      typeChar();
-    }
-
-    function glitchOut() {
-      let fakeErrors = [
-        'FATAL EXCEPTION: daem0n.process(0173)',
-        '>>> REVELATIO INFERNI <<<',
-        'SIGSEGV at 0xDEADFAITH',
-        'C:\\souls\\core\\confess.dll is missing',
-        'PRAYER.EXE terminated unexpectedly',
-        'invoke(_abaddon, 666)',
-        '!!! UNHOLY STACK OVERFLOW !!!'
-      ];
-      let index = 0;
-      let interval = setInterval(() => {
-        if (index >= fakeErrors.length) {
-          clearInterval(interval);
+          i +=3;
         } else {
-          consoleErrors.textContent += '\n' + fakeErrors[index++];
+          element.innerHTML += text[i];
+          if (text[i] !== ' ' && text[i] !== '\n') {
+            typeSound.currentTime = 0;
+            typeSound.play();
+          }
+          i++; await sleep(speed);
         }
+      }
+    }
+    
+    function sleep(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+    async function runSequence() {
+      for (let i=0; i<3; i++) {
+        await typePart(parts[i], textEl, 80);
+      }
+      await sleep(1500);
+      textEl.innerHTML = '';
+
+      gifContainer.style.display = 'block';
+      for (let i=3; i<parts.length; i++) {
+        await typePart(parts[i], secondEl, 90);
+      }
+      await sleep(2000);
+      secondEl.innerHTML = '';
+      gifContainer.style.display = 'none';
+      ambience.pause();
+      overlay.remove();
+
+      await sleep(500);
+      screamer.style.display = 'block';
+      screamSound.play();
+      consoleGlitch();
+    }
+
+    function consoleGlitch() {
+      const errors = [
+        'FATAL: daemon.soul crashed!',
+        'NULLPOINTER at confession.log:173',
+        'Error: invocation of Abaddon failed',
+        '§§ UnholyInvocation §§',
+        'stack overflow: abyss.spawn()'
+      ];
+      let idx = 0;
+      const intv = setInterval(() => {
+        if (idx>=errors.length) clearInterval(intv);
+        else console.error(errors[idx++]);
       }, 500);
     }
   </script>
