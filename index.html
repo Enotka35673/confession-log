@@ -282,21 +282,70 @@
         await sleep(10);
       }
 
-      await sleep(5000);
-      document.body.innerHTML = '';
-      await sleep(5000);
+async function finalPhase() {
+  document.body.innerHTML = `
+    <img id="vhsGlitch" src="vhs-glitch.gif" alt="VHS Glitch" style="position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;z-index:0;">
+    <div class="screen" id="terminal" style="position:relative;z-index:2;"></div>
+    <img id="facePng" src="face.png" style="position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;opacity:0;z-index:3;"/>
+  `;
+  const terminal = document.getElementById('terminal');
+  await sleep(1000);
+  await typeText(">> > SYSTEM RESPONSE:", 60);
+  await sleep(5000);
 
-      const faceImg = document.createElement('img');
-      faceImg.src = "face.png";
-      faceImg.style = "position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;opacity:0;z-index:3;transition: opacity 10s linear;";
-      document.body.appendChild(faceImg);
-      faceImg.offsetHeight; // force repaint
-      faceImg.style.opacity = 20;
-      endAudio.play();
+  const msg = "░░░ WE SEE YOU ░░░";
+  for (let i = 0; i < msg.length; i++) {
+    const span = document.createElement('span');
+    span.textContent = msg[i];
+    span.className = 'red glitching';
+    span.style.fontSize = '48px';
+    terminal.appendChild(span);
+    await sleep(200);
+  }
 
-      await sleep(20000);
-      document.body.innerHTML = '';
-    }
-  </script>
+  await sleep(500);
+  spamAudio.play();
+  terminal.innerHTML = '';
+  for (let i = 0; i < 300; i++) {
+    const span = document.createElement('span');
+    span.textContent = "░░░ WE SEE YOU ░░░";
+    span.className = 'red glitching';
+    span.style.fontSize = '32px';
+    span.style.position = 'absolute';
+    span.style.left = `${Math.random() * 100}%`;
+    span.style.top = `${Math.random() * 100}%`;
+    document.body.appendChild(span);
+    await sleep(10);
+  }
+
+  await sleep(5000);
+  document.body.innerHTML = '';
+
+  // добавляем лицо с постепенным появлением
+  const faceImg = document.createElement('img');
+  faceImg.src = "face.png";
+  faceImg.style = `
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    object-fit:cover;
+    opacity:0.2;
+    z-index:3;
+    transition: opacity 10s linear;
+  `;
+  document.body.appendChild(faceImg);
+
+  setTimeout(() => {
+    faceImg.style.opacity = 0.3;
+  }, 100);
+
+  endAudio.play();
+
+  await sleep(20000);
+  document.body.innerHTML = '';
+}
+</script>
 </body>
 </html>
