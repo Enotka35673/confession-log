@@ -33,6 +33,7 @@
       font-size: 20px;
       overflow-y: auto;
       white-space: pre-wrap;
+      z-index: 2;
     }
 
     .start-btn {
@@ -62,19 +63,35 @@
 
     #giphy, #vhsGlitch, #noiseGif {
       position: absolute;
-      top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      max-width: 100%;
-      max-height: 100%;
+      transform: translateX(-50%);
+      max-width: 300px;
       display: none;
       pointer-events: none;
-      z-index: 10;
+    }
+
+    #giphy {
+      bottom: 20px;
+      z-index: 2;
+    }
+
+    #vhsGlitch {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
     }
 
     #noiseGif {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       opacity: 0.08;
       z-index: 1;
+      object-fit: cover;
     }
 
     audio {
@@ -200,6 +217,7 @@
         const msg = chaos[Math.floor(Math.random() * chaos.length)];
         const div = document.createElement('div');
         div.className = 'red glitching';
+        div.style.fontSize = '28px';
         div.textContent = msg;
         terminal.appendChild(div);
         await sleep(25);
@@ -223,9 +241,11 @@
     }
 
     async function finalPhase() {
-      document.body.innerHTML = '<div class="screen" id="terminal"></div>';
+      document.body.innerHTML = `
+        <img id="vhsGlitch" src="vhs-glitch.gif" alt="VHS Glitch" style="position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;z-index:0;">
+        <div class="screen" id="terminal" style="position:relative;z-index:2;"></div>
+      `;
       const terminal = document.getElementById('terminal');
-
       const sleep = ms => new Promise(res => setTimeout(res, ms));
       const type = async (text, speed = 50) => {
         for (let i = 0; i < text.length; i++) {
@@ -252,10 +272,11 @@
 
       await sleep(5000);
       terminal.innerHTML = '';
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 300; i++) {
         const span = document.createElement('span');
         span.textContent = "░░░ WE SEE YOU ░░░";
         span.className = 'red glitching';
+        span.style.fontSize = '32px';
         span.style.position = 'absolute';
         span.style.left = `${Math.random() * 100}%`;
         span.style.top = `${Math.random() * 100}%`;
@@ -265,6 +286,11 @@
 
       await sleep(2000);
       document.body.innerHTML = '';
+    }
+  </script>
+</body>
+</html>
+
     }
   </script>
 </body>
