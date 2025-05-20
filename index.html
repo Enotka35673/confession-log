@@ -61,17 +61,11 @@
       100% { transform: translate(0, 0); }
     }
 
-    #giphy, #vhsGlitch, #noiseGif {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: 300px;
-      display: none;
-      pointer-events: none;
-    }
-
     #giphy {
-      bottom: 20px;
+      display: block;
+      margin: 40px auto 20px auto;
+      width: 120px;
+      position: relative;
       z-index: 2;
     }
 
@@ -82,6 +76,7 @@
       height: 100%;
       object-fit: cover;
       z-index: 0;
+      position: absolute;
     }
 
     #noiseGif {
@@ -92,6 +87,7 @@
       opacity: 0.08;
       z-index: 1;
       object-fit: cover;
+      position: absolute;
     }
 
     audio {
@@ -106,14 +102,12 @@
       <button class="start-btn" onclick="startSequence()">Click to start...</button>
     </div>
   </div>
-  <img id="giphy" src="giphy.gif" alt="Giphy">
-  <img id="vhsGlitch" src="vhs-glitch.gif" alt="VHS Glitch">
-  <img id="noiseGif" src="noise.gif" alt="Noise">
+  <img id="vhsGlitch" src="vhs-glitch.gif" alt="VHS Glitch" style="display: none;">
+  <img id="noiseGif" src="noise.gif" alt="Noise" style="display: none;">
 
   <script>
     const terminal = document.getElementById('terminal');
     const startScreen = document.getElementById('startScreen');
-    const giphy = document.getElementById('giphy');
     const glitch = document.getElementById('vhsGlitch');
     const noise = document.getElementById('noiseGif');
     const bgAudio = document.getElementById('bgAudio');
@@ -167,7 +161,10 @@
       terminal.innerHTML = '';
 
       await sleep(500);
-      giphy.style.display = 'block';
+      const gif = document.createElement('img');
+      gif.src = 'giphy.gif';
+      gif.id = 'giphy';
+      terminal.appendChild(gif);
 
       await typeText(">> SUBJECT 0173: ", 40);
       await typeText("“I prayed. No one answered.”", 200, 'fuchsia');
@@ -185,7 +182,6 @@
 
     async function glitchPhase() {
       terminal.innerHTML = '';
-      giphy.style.display = 'none';
       noise.style.display = 'none';
 
       glitch.style.display = 'block';
@@ -286,11 +282,6 @@
 
       await sleep(2000);
       document.body.innerHTML = '';
-    }
-  </script>
-</body>
-</html>
-
     }
   </script>
 </body>
