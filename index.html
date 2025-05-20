@@ -321,30 +321,65 @@ async function finalPhase() {
   await sleep(5000);
   document.body.innerHTML = '';
 
-  // добавляем лицо с постепенным появлением
-  const faceImg = document.createElement('img');
-  faceImg.src = "face.png";
-  faceImg.style = `
-    position:fixed;
-    top:0;
-    left:0;
-    width:100vw;
-    height:100vh;
-    object-fit:cover;
-    opacity:0.2;
-    z-index:3;
-    transition: opacity 10s linear;
-  `;
-  document.body.appendChild(faceImg);
+ async function finalPhase() {
+  // Скрыть всё
+  document.querySelectorAll('*').forEach(el => el.style.display = 'none');
 
-  setTimeout(() => {
-    faceImg.style.opacity = 0.3;
-  }, 100);
+  // Показать нужные элементы
+  glitch.style.display = 'block';
+  terminal.style.display = 'block';
+  terminal.innerHTML = '';
+  face.style.display = 'block';
+  face.style.opacity = 0;
 
+  await sleep(1000);
+  await typeText(">> > SYSTEM RESPONSE:", 60);
+  await sleep(5000);
+
+  const msg = "░░░ WE SEE YOU ░░░";
+  for (let i = 0; i < msg.length; i++) {
+    const span = document.createElement('span');
+    span.textContent = msg[i];
+    span.className = 'red glitching';
+    span.style.fontSize = '48px';
+    terminal.appendChild(span);
+    await sleep(200);
+  }
+
+  await sleep(500);
+  spamAudio.play();
+  terminal.innerHTML = '';
+
+  for (let i = 0; i < 300; i++) {
+    const span = document.createElement('span');
+    span.textContent = "░░░ WE SEE YOU ░░░";
+    span.className = 'red glitching';
+    span.style.fontSize = '32px';
+    span.style.position = 'absolute';
+    span.style.left = `${Math.random() * 100}%`;
+    span.style.top = `${Math.random() * 100}%`;
+    document.body.appendChild(span);
+    await sleep(10);
+  }
+
+  await sleep(5000);
+
+  // Очистка экрана, затем медленно показать лицо
+  terminal.style.display = 'none';
+  document.querySelectorAll('span').forEach(el => el.remove());
+  glitch.style.display = 'none';
+  noise.style.display = 'none';
+  face.style.opacity = 0;
+  face.style.display = 'block';
+
+  await sleep(1000); // пауза перед появлением
+  face.style.transition = 'opacity 10s linear';
+  face.style.opacity = 0.05;
   endAudio.play();
 
   await sleep(20000);
-  document.body.innerHTML = '';
+
+  document.body.innerHTML = ''; // окончательная очистка
 }
 </script>
 </body>
